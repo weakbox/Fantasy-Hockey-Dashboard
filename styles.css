@@ -1,0 +1,28 @@
+header {
+  width: 100%;
+  border-bottom: 5px solid black;
+  text-align: center;
+}
+
+body {
+  font-family: Rubik, sans-serif;
+  text-align: center;
+}
+
+.team-logo {
+  max-width: 10%;
+}
+
+#result {
+  padding-top: 20px;
+}
+
+hr {
+  width: 85%;
+}
+
+.inline-logo {
+  display: inline;
+  width: 25px;
+  vertical-align: middle;
+}
