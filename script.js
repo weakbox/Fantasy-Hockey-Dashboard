@@ -111,9 +111,15 @@ function displayScheduleData(data)
 
         let string = "";
 
+        // Add a title every new week:
+        if (index % (teamsArr.length / 2) === 0) 
+        {
+            string += `<p class="week"><strong>week ${matchup['matchupPeriodId']}</strong></p>`;
+        }
+
         if (awayTotalPoints === homeTotalPoints)
         {
-            string = `
+            string += `
             The matchup between 
             <img src=${awayTeamLogo} class="inline-logo" /> 
             <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
@@ -125,7 +131,7 @@ function displayScheduleData(data)
         } 
         else if (awayTotalPoints > homeTotalPoints)
         {
-            string = `
+            string += `
             <img src=${awayTeamLogo} class="inline-logo" /> 
             <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
             defeated 
@@ -135,7 +141,7 @@ function displayScheduleData(data)
         }
         else // Home team won:
         {
-            string = `
+            string += `
             <img src=${homeTeamLogo} class="inline-logo" /> 
             <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
             defeated 

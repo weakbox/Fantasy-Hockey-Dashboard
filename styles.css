@@ -11,7 +11,7 @@ header {
 body {
   font-family: Rubik, sans-serif;
   text-align: center;
-  background-color: aliceblue;
+  background-color: rgb(207, 234, 243);
 }
 
 .team-logo {
@@ -19,7 +19,7 @@ body {
 }
 
 #result {
-  padding-top: 15px;
+  
   background-color: white;
   width: 90%;
   margin: auto;
@@ -27,11 +27,16 @@ body {
 }
 
 hr {
-  width: 85%;
+  width: 70%;
+  color: rgb(207, 234, 243);
 }
 
 .inline-logo {
   display: inline;
   width: 25px;
   vertical-align: middle;
+}
+
+.week {
+  font-size: 1.5em;
 }
