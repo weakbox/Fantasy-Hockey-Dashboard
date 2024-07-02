@@ -69,12 +69,10 @@ function displayScheduleData(data)
     const scheduleArr = data['schedule'];
     const teamsArr = data['teams'];
 
-    console.log("Schedule Array: ", scheduleArr);
+    console.log("Schedule Array: ", scheduleArr, "Length: ", scheduleArr.length);
     console.log("Teams Array: ", teamsArr);
 
-    let index = 0;
-
-    scheduleArr.forEach((matchup) => 
+    scheduleArr.forEach((matchup, index) => 
     {
         const awayTeam = matchup['away'];
         const homeTeam = matchup['home'];
@@ -124,14 +122,13 @@ function displayScheduleData(data)
             ${homePoints} - ${awayPoints}
             `;
         }
-        result.innerHTML += `<p>${string}</p>`;
 
-        index++;
-
-        if (index >= teamsArr.length / 2) 
+        // Add a divider to seperate weeks:
+        if ((index + 1) % (teamsArr.length / 2) === 0 && index) 
         {
-            result.innerHTML += `<hr></hr>`;
-            index = 0;
+            string += `<hr></hr>`;
         }
+
+        result.innerHTML += `<p>${string}</p>`;
     });
 }
