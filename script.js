@@ -144,7 +144,7 @@ function displayScheduleData(data)
             `;
         }
 
-        string += `<button id="info-btn-${index} class="info-btn">get more info</button>`;
+        // string += `<button id="info-btn-${index} class="info-btn">get more info</button>`;
 
         // Add a divider to seperate weeks:
         if ((index + 1) % (teamsArr.length / 2) === 0 && index) 
