@@ -1,8 +1,27 @@
 const result = document.getElementById("result");
 
-// Testing an API fetch:
 let draftData = [];
 let scheduleData = [];
+
+// Insert relevent API parameters into local database:
+let localDatabase = {};
+
+/*
+{
+    members:
+        firstName:
+        lastName:
+        id:
+    teams:
+        abbrev:
+        id:
+        logo:
+        name:
+        owners:
+    schedule:
+        the whole shebang
+}
+*/
 
 const draftUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=mDraftDetail&view=mSettings&view=mTeam&view=modular&view=mNav";
 const playersUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/players?scoringPeriodId=0&view=players_wl"
@@ -84,44 +103,48 @@ function displayScheduleData(data)
         const awayTeamLogo =  teamsArr.find((team) => team['id'] == awayTeam['teamId'])['logo'];
         const homeTeamLogo =  teamsArr.find((team) => team['id'] == homeTeam['teamId'])['logo'];
 
-        const awayPoints = awayTeam['totalPoints'];
-        const homePoints = homeTeam['totalPoints'];
+        const awayTotalPoints = awayTeam['totalPoints'];
+        const homeTotalPoints = homeTeam['totalPoints'];
         
+        const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
+        const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
+
         let string = "";
 
-        if (awayPoints === homePoints)
+        if (awayTotalPoints === homeTotalPoints)
         {
             string = `
             The matchup between 
             <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> 
+            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
             and 
             <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> ended in a tie!
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            ended in a tie!
             `;
         } 
-        else if (awayPoints > homePoints)
+        else if (awayTotalPoints > homeTotalPoints)
         {
             string = `
             <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> 
+            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
             defeated 
             <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> 
-            ${awayPoints} - ${homePoints}
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
             `;
         }
         else // Home team won:
         {
             string = `
             <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> 
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
             defeated 
             <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> 
-            ${homePoints} - ${awayPoints}
+            <strong>${awayTeamName}</strong> (${awayTotalPoints})
             `;
         }
+
+        string += `<button id="info-btn-${index} class="info-btn">get more info</button>`;
 
         // Add a divider to seperate weeks:
         if ((index + 1) % (teamsArr.length / 2) === 0 && index) 
@@ -131,4 +154,17 @@ function displayScheduleData(data)
 
         result.innerHTML += `<p>${string}</p>`;
     });
+}
+
+function pointsObjToArr(obj)
+{
+    let pointsArr = [];
+    const keysArr = Object.keys(obj);
+    
+    keysArr.forEach((key) => 
+    {
+        pointsArr.push(obj[key]);
+    });
+
+    return pointsArr;
 }
