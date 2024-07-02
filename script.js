@@ -37,6 +37,8 @@ function displayDraftData(data)
     const members = data['members'];
     const teams = data['teams'];
 
+    let index = 0;
+
     members.forEach((member) => 
     {
         const firstName = member['firstName'];
@@ -70,13 +72,15 @@ function displayScheduleData(data)
     console.log("Schedule Array: ", scheduleArr);
     console.log("Teams Array: ", teamsArr);
 
+    let index = 0;
+
     scheduleArr.forEach((matchup) => 
     {
         const awayTeam = matchup['away'];
         const homeTeam = matchup['home'];
 
-        const awayTeamName = teamsArr.find((team) => team['id'] == awayTeam['teamId'])['name'];
-        const homeTeamName = teamsArr.find((team) => team['id'] == homeTeam['teamId'])['name'];
+        const awayTeamName = teamsArr.find((team) => team['id'] == awayTeam['teamId'])['name'].toLowerCase();
+        const homeTeamName = teamsArr.find((team) => team['id'] == homeTeam['teamId'])['name'].toLowerCase();
 
         // TODO: Fix this repetitive code.
         const awayTeamLogo =  teamsArr.find((team) => team['id'] == awayTeam['teamId'])['logo'];
@@ -121,5 +125,13 @@ function displayScheduleData(data)
             `;
         }
         result.innerHTML += `<p>${string}</p>`;
+
+        index++;
+
+        if (index >= teamsArr.length / 2) 
+        {
+            result.innerHTML += `<hr></hr>`;
+            index = 0;
+        }
     });
 }
