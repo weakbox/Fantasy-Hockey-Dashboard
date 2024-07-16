@@ -2,6 +2,10 @@
   border: 1px solid red;
 } */
 
+:root {
+  --main-bg-color: rgb(161, 193, 206);
+}
+
 header {
   text-align: center;
   background-color: white;
@@ -13,7 +17,7 @@ header {
 body {
   font-family: Rubik, sans-serif;
   text-align: center;
-  background-color: aliceblue;
+  background-color: var(--main-bg-color)
 }
 
 .team-logo {
