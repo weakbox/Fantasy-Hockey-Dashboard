@@ -41,8 +41,8 @@ function displayScheduleData(data)
             return;
         }
         
-        const awayTeamName = teamsArr.find((team) => team['id'] == awayTeam['teamId'])['name'].toLowerCase();
-        const homeTeamName = teamsArr.find((team) => team['id'] == homeTeam['teamId'])['name'].toLowerCase();
+        const awayTeamName = teamsArr.find((team) => team['id'] == awayTeam['teamId'])['name'];
+        const homeTeamName = teamsArr.find((team) => team['id'] == homeTeam['teamId'])['name'];
 
         // TODO: Fix this repetitive code.
         const awayTeamLogo =  teamsArr.find((team) => team['id'] == awayTeam['teamId'])['logo'];

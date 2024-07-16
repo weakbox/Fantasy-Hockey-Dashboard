@@ -15,7 +15,7 @@ header {
 }
 
 body {
-  font-family: Rubik, sans-serif;
+  font-family: Inter;
   text-align: center;
   background-color: var(--main-bg-color)
 }
