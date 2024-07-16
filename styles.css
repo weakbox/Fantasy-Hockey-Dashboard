@@ -3,27 +3,21 @@
 } */
 
 header {
-  width: 100%;
-  border-bottom: 5px solid black;
   text-align: center;
+  background-color: white;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 8px;
 }
 
 body {
   font-family: Rubik, sans-serif;
   text-align: center;
-  background-color: rgb(207, 234, 243);
+  background-color: aliceblue;
 }
 
 .team-logo {
   max-width: 10%;
-}
-
-#result {
-  
-  background-color: white;
-  width: 90%;
-  margin: auto;
-  border-radius: 10px;
 }
 
 hr {
@@ -40,3 +34,10 @@ hr {
 .week {
   font-size: 1.5em;
 }
+
+.matchup-container {
+  margin: 10px;
+  background:white;
+  border-radius: 5px;
+  padding: 8px;
+  }

@@ -6,40 +6,11 @@ let scheduleData = [];
 // Insert relevent API parameters into local database:
 let localDatabase = {};
 
-/*
-{
-    members:
-        firstName:
-        lastName:
-        id:
-    teams:
-        abbrev:
-        id:
-        logo:
-        name:
-        owners:
-    schedule:
-        the whole shebang
-}
-*/
-
 const draftUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=mDraftDetail&view=mSettings&view=mTeam&view=modular&view=mNav";
 const playersUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/players?scoringPeriodId=0&view=players_wl"
 const scoreboardUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam"
 
-// Fetch team/member info:
-// fetch(draftUrl)
-//     .then((res) => res.json())
-//     .then((data) => {
-//         draftData = structuredClone(data);
-//         // console.log("RAW DRAFT DATA EXPORT: ", draftData);
-//         displayDraftData(draftData);
-//     })
-//     .catch((err) => { 
-//         result.innerText = "There was a problem fetching the data!" 
-//     });
-
-// // Fetch schedule information:
+// Fetch schedule information:
 fetch(scoreboardUrl)
     .then((res) => res.json())
     .then((data) => {
@@ -50,38 +21,6 @@ fetch(scoreboardUrl)
     .catch((err) => { 
         console.log(err); 
     });
- 
-function displayDraftData(data) 
-{
-    const members = data['members'];
-    const teams = data['teams'];
-
-    let index = 0;
-
-    members.forEach((member) => 
-    {
-        const firstName = member['firstName'];
-        const lastName = member['lastName'];
-
-        const id = member['id'];
-        
-        // Find the team associated with the member's ID:
-        const team = teams.find((team) => team['owners'].includes(id));
-
-        const teamName = team['name'];
-        const teamAbbrev = team['abbrev'];
-
-        const teamLogoSrc = team['logo'];
-        const teamPoints = team['points'];
-
-        result.innerHTML +=  `
-            <img src="${teamLogoSrc}" class="team-logo" />
-            <p>${firstName} ${lastName}, the manager of (the) <strong>${teamName} (${teamAbbrev})</strong>.\n</p>
-            <p>This team finished the season with <strong>${teamPoints.toFixed(1)}</strong> points.</p>
-            <hr></hr>
-        `;
-    })
-}
 
 function displayScheduleData(data) 
 {
@@ -93,9 +32,15 @@ function displayScheduleData(data)
 
     scheduleArr.forEach((matchup, index) => 
     {
-        const awayTeam = matchup['away'];
+        const awayTeam = matchup?.away ?? null;
         const homeTeam = matchup['home'];
 
+        if (awayTeam == null || homeTeam == null)
+        {
+            console.log("Encountered null at index: ", index);
+            return;
+        }
+        
         const awayTeamName = teamsArr.find((team) => team['id'] == awayTeam['teamId'])['name'].toLowerCase();
         const homeTeamName = teamsArr.find((team) => team['id'] == homeTeam['teamId'])['name'].toLowerCase();
 
@@ -110,12 +55,6 @@ function displayScheduleData(data)
         const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
 
         let string = "";
-
-        // Add a title every new week:
-        if (index % (teamsArr.length / 2) === 0) 
-        {
-            string += `<p class="week"><strong>week ${matchup['matchupPeriodId']}</strong></p>`;
-        }
 
         if (awayTotalPoints === homeTotalPoints)
         {
@@ -150,15 +89,7 @@ function displayScheduleData(data)
             `;
         }
 
-        // string += `<button id="info-btn-${index} class="info-btn">get more info</button>`;
-
-        // Add a divider to seperate weeks:
-        if ((index + 1) % (teamsArr.length / 2) === 0 && index) 
-        {
-            string += `<hr></hr>`;
-        }
-
-        result.innerHTML += `<p>${string}</p>`;
+        result.innerHTML += `<div class="matchup-container">${string}</div>`;
     });
 }
 
@@ -173,4 +104,34 @@ function pointsObjToArr(obj)
     });
 
     return pointsArr;
+}
+
+function createPlot(chartId)
+{
+    const canvas = document.createElement("canvas");
+    canvas.id = chartId;
+    result.appendChild(canvas);
+
+    const context = canvas.getContext('2d');
+    
+    new Chart(context, 
+    {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                borderWidth: 1
+            }]
+            },
+            options: {
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }
+        }
+    });
+    console.log("made the chart?");
 }
