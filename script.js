@@ -15,7 +15,7 @@ fetch(scoreboardUrl)
     .then((res) => res.json())
     .then((data) => {
         scheduleData = structuredClone(data);
-        console.log("RAW SCHEDULE DATA EXPORT: ", scheduleData);
+        // console.log("RAW SCHEDULE DATA EXPORT: ", scheduleData);
         displayScheduleData(scheduleData);
     })
     .catch((err) => { 
@@ -26,72 +26,102 @@ function displayScheduleData(data)
 {
     const scheduleArr = data['schedule'];
     const teamsArr = data['teams'];
+    const activeMatchupPeriods = data['status']['currentMatchupPeriod'];
 
     console.log("Schedule Array: ", scheduleArr, "Length: ", scheduleArr.length);
     console.log("Teams Array: ", teamsArr);
+    console.log(`Found ${activeMatchupPeriods} active matchup periods.`);
 
-    scheduleArr.forEach((matchup, index) => 
+    // Extract data from each matchup period one at a time.
+    for (let i = 1; i <= activeMatchupPeriods; i++)
     {
-        const awayTeam = matchup?.away ?? null;
-        const homeTeam = matchup['home'];
+        console.log(`Filtering matchup period ${i}: `);
 
-        if (awayTeam == null || homeTeam == null)
-        {
-            console.log("Encountered null at index: ", index);
-            return;
-        }
-        
-        const awayTeamName = teamsArr.find((team) => team['id'] == awayTeam['teamId'])['name'];
-        const homeTeamName = teamsArr.find((team) => team['id'] == homeTeam['teamId'])['name'];
+        matchupPeriodScheduleArr = scheduleArr.filter((matchup) => matchup['matchupPeriodId'] === i);
 
-        // TODO: Fix this repetitive code.
-        const awayTeamLogo =  teamsArr.find((team) => team['id'] == awayTeam['teamId'])['logo'];
-        const homeTeamLogo =  teamsArr.find((team) => team['id'] == homeTeam['teamId'])['logo'];
+        console.log(matchupPeriodScheduleArr);
 
-        const awayTotalPoints = awayTeam['totalPoints'];
-        const homeTotalPoints = homeTeam['totalPoints'];
-        
-        const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
-        const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
+        result.innerHTML += `
+            <div id="matchup-period-container-${i}" class="matchup-period-container">
+                <p class="bubble"><strong>Matchup ${i}</strong></p>
+            <div>
+        `;
 
-        let string = "";
-
-        if (awayTotalPoints === homeTotalPoints)
-        {
-            string += `
-            The matchup between 
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
-            and 
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
-            ended in a tie!
-            `;
-        } 
-        else if (awayTotalPoints > homeTotalPoints)
-        {
-            string += `
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
-            defeated 
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
-            `;
-        }
-        else // Home team won:
-        {
-            string += `
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
-            defeated 
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints})
-            `;
-        }
-
-        result.innerHTML += `<div class="matchup-container">${string}</div>`;
-    });
+        matchupPeriodScheduleArr.forEach((matchup) => extractMatchupData(matchup, teamsArr));
+    }
 }
+
+function extractMatchupData(matchup, teams)
+{   
+    const { matchupPeriodId } = matchup;
+
+    const awayTeam = matchup?.away ?? null;
+    const homeTeam = matchup['home'];
+
+    // Check if match was actually a bye-week.
+    if (awayTeam == null || homeTeam == null)
+    {
+        return;
+    }
+    
+    const awayTeamName = teams.find((team) => team['id'] == awayTeam['teamId'])['name'];
+    const homeTeamName = teams.find((team) => team['id'] == homeTeam['teamId'])['name'];
+
+    // TODO: Fix this repetitive code.
+    const awayTeamLogo =  teams.find((team) => team['id'] == awayTeam['teamId'])['logo'];
+    const homeTeamLogo =  teams.find((team) => team['id'] == homeTeam['teamId'])['logo'];
+
+    const awayTotalPoints = awayTeam['totalPoints'];
+    const homeTotalPoints = homeTeam['totalPoints'];
+    
+    const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
+    const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
+
+    let string = "";
+
+    if (awayTotalPoints === homeTotalPoints)
+    {
+        string += `
+        The matchup between 
+        <img src=${awayTeamLogo} class="inline-logo" /> 
+        <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+        and 
+        <img src=${homeTeamLogo} class="inline-logo" /> 
+        <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+        ended in a tie!
+        `;
+    } 
+    else if (awayTotalPoints > homeTotalPoints)
+    {
+        string += `
+        <img src=${awayTeamLogo} class="inline-logo" /> 
+        <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+        defeated 
+        <img src=${homeTeamLogo} class="inline-logo" /> 
+        <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+        `;
+    }
+    else // Home team won:
+    {
+        string += `
+        <img src=${homeTeamLogo} class="inline-logo" /> 
+        <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+        defeated 
+        <img src=${awayTeamLogo} class="inline-logo" /> 
+        <strong>${awayTeamName}</strong> (${awayTotalPoints})
+        `;
+    }
+
+    div = document.getElementById(`matchup-period-container-${matchupPeriodId}`);
+    div.innerHTML += `<div class="matchup-container">${string}</div>`;
+}
+
+
+
+
+
+
+// Unused code:
 
 function pointsObjToArr(obj)
 {

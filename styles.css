@@ -3,7 +3,9 @@
 } */
 
 :root {
-  --main-bg-color: rgb(161, 193, 206);
+  --main-bg-color: rgb(24, 85, 121);
+  --secondary-bg-color: rgb(200, 233, 255);
+
 }
 
 header {
@@ -17,7 +19,7 @@ header {
 body {
   font-family: Inter, sans-serif;
   text-align: center;
-  background-color: var(--main-bg-color)
+  background-color: var(--main-bg-color);
 }
 
 .team-logo {
@@ -32,7 +34,7 @@ body {
 
 .matchup-container {
   margin: 5px;
-  background:white;
+  background: white;
   border-radius: 5px;
   padding: 8px;
 }
@@ -40,6 +42,25 @@ body {
 .result-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+}
+
+.matchup-period-container {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  background-color: var(--secondary-bg-color);
+  margin: 5px;
+  border-radius: 5px;
+  padding: 8px;
+}
+
+.bubble {
+  place-self: center;
+  background-color: white;
+  margin: 5px;
+  border-radius: 5px;
+  padding: 8px;
+  width: fit-content;
 }
 
 /* Media queries need to be below CSS declarations! */
