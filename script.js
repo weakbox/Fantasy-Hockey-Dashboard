@@ -1,25 +1,20 @@
 const result = document.getElementById("result");
 
-let draftData = [];
-let scheduleData = [];
+const year = 2024;
 
-// Insert relevent API parameters into local database:
-let localDatabase = {};
-
-const draftUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=mDraftDetail&view=mSettings&view=mTeam&view=modular&view=mNav";
-const playersUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/players?scoringPeriodId=0&view=players_wl"
-const scoreboardUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam"
+// const draftUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=mDraftDetail&view=mSettings&view=mTeam&view=modular&view=mNav";
+// const playersUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/players?scoringPeriodId=0&view=players_wl"
+const scoreboardUrl = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`
 
 // Fetch schedule information:
 fetch(scoreboardUrl)
     .then((res) => res.json())
     .then((data) => {
-        scheduleData = structuredClone(data);
-        // console.log("RAW SCHEDULE DATA EXPORT: ", scheduleData);
-        displayScheduleData(scheduleData);
+        console.log("Raw data: ", data);
+        displayScheduleData(data);
     })
     .catch((err) => { 
-        console.log(err); 
+        console.log("Error logged: ", err); 
     });
 
 function displayScheduleData(data) 
@@ -35,11 +30,7 @@ function displayScheduleData(data)
     // Extract data from each matchup period one at a time.
     for (let i = 1; i <= activeMatchupPeriods; i++)
     {
-        console.log(`Filtering matchup period ${i}: `);
-
         matchupPeriodScheduleArr = scheduleArr.filter((matchup) => matchup['matchupPeriodId'] === i);
-
-        console.log(matchupPeriodScheduleArr);
 
         result.innerHTML += `
             <div id="matchup-period-container-${i}" class="matchup-period-container">
@@ -73,9 +64,10 @@ function extractMatchupData(matchup, teams)
 
     const awayTotalPoints = awayTeam['totalPoints'];
     const homeTotalPoints = homeTeam['totalPoints'];
-    
-    const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
-    const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
+
+    // TODO: Fix this code block when viewing data from 2025.
+    // const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
+    // const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
 
     let string = "";
 
