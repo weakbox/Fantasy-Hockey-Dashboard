@@ -2,11 +2,11 @@ const result = document.getElementById("result");
 const select2024Button = document.getElementById("select-2024-button");
 const select2025Button = document.getElementById("select-2025-button");
 
-const year = 2025;
+const defaultYear = 2025;
 
 // const draftUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=mDraftDetail&view=mSettings&view=mTeam&view=modular&view=mNav";
 // const playersUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/players?scoringPeriodId=0&view=players_wl";
-const scoreboardUrl = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
+const scoreboardUrl = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${defaultYear}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
 
 // Fetch schedule information:
 fetch(scoreboardUrl)
@@ -46,7 +46,7 @@ function displayScheduleData(data)
 
 function extractMatchupData(matchup, teams)
 {   
-    const { matchupPeriodId } = matchup;
+    const { matchupPeriodId, winner } = matchup;
 
     const awayTeam = matchup?.away ?? null;
     const homeTeam = matchup['home'];
@@ -73,37 +73,54 @@ function extractMatchupData(matchup, teams)
 
     let string = "";
 
-    if (awayTotalPoints === homeTotalPoints)
+    switch (winner)
     {
-        string += `
-        The matchup between 
-        <img src=${awayTeamLogo} class="inline-logo" /> 
-        <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
-        and 
-        <img src=${homeTeamLogo} class="inline-logo" /> 
-        <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
-        ended in a tie!
-        `;
-    } 
-    else if (awayTotalPoints > homeTotalPoints)
-    {
-        string += `
-        <img src=${awayTeamLogo} class="inline-logo" /> 
-        <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
-        defeated 
-        <img src=${homeTeamLogo} class="inline-logo" /> 
-        <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
-        `;
-    }
-    else // Home team won:
-    {
-        string += `
-        <img src=${homeTeamLogo} class="inline-logo" /> 
-        <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
-        defeated 
-        <img src=${awayTeamLogo} class="inline-logo" /> 
-        <strong>${awayTeamName}</strong> (${awayTotalPoints})
-        `;
+        case ("AWAY"):
+            string += `
+            <img src=${awayTeamLogo} class="inline-logo" /> 
+            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+            defeated 
+            <img src=${homeTeamLogo} class="inline-logo" /> 
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            `;
+            break;
+
+        case ("HOME"):       
+            string += `
+            <img src=${homeTeamLogo} class="inline-logo" /> 
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            defeated 
+            <img src=${awayTeamLogo} class="inline-logo" /> 
+            <strong>${awayTeamName}</strong> (${awayTotalPoints})
+            `;
+            break;
+
+        case ("TIE"):
+            string += `
+            The matchup between 
+            <img src=${awayTeamLogo} class="inline-logo" /> 
+            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+            and 
+            <img src=${homeTeamLogo} class="inline-logo" /> 
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            ended in a tie!
+            `;
+            break;
+
+        case ("UNDECIDED"):
+        {
+            string += `
+            <img src=${awayTeamLogo} class="inline-logo" /> 
+            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+            versus 
+            <img src=${homeTeamLogo} class="inline-logo" /> 
+            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            `;
+            break;
+        }
+
+        default:
+            console.log("Something went wrong in the switch statement...");
     }
 
     div = document.getElementById(`matchup-period-container-${matchupPeriodId}`);
@@ -153,34 +170,4 @@ function pointsObjToArr(obj)
     });
 
     return pointsArr;
-}
-
-function createPlot(chartId)
-{
-    const canvas = document.createElement("canvas");
-    canvas.id = chartId;
-    result.appendChild(canvas);
-
-    const context = canvas.getContext('2d');
-    
-    new Chart(context, 
-    {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }]
-            },
-            options: {
-            scales: {
-                y: {
-                beginAtZero: true
-                }
-            }
-        }
-    });
-    console.log("made the chart?");
 }
