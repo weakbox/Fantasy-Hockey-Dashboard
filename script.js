@@ -1,6 +1,7 @@
 const result = document.getElementById("result");
 const select2024Button = document.getElementById("select-2024-button");
 const select2025Button = document.getElementById("select-2025-button");
+const testButton = document.getElementById("test-button");
 
 const defaultYear = 2025;
 
@@ -75,11 +76,13 @@ function extractMatchupData(matchup, teams)
     let string = "";
 
     const matchupBadge = determineMatchupBadge(awayTotalPoints, homeTotalPoints);
+    const matchupPrefix = determineMatchupPrefix(matchup.playoffTierType);
 
     switch (winner)
     {
         case ("AWAY"):
             string += `
+            ${matchupPrefix}
             ${matchupBadge}
             <img src=${awayTeamLogo} class="inline-logo" /> 
             <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
@@ -91,6 +94,7 @@ function extractMatchupData(matchup, teams)
 
         case ("HOME"):       
             string += `
+            ${matchupPrefix}
             ${matchupBadge}
             <img src=${homeTeamLogo} class="inline-logo" /> 
             <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
@@ -102,6 +106,8 @@ function extractMatchupData(matchup, teams)
 
         case ("TIE"):
             string += `
+            ${matchupPrefix}
+            ${matchupBadge}
             The matchup between 
             <img src=${awayTeamLogo} class="inline-logo" /> 
             <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
@@ -115,6 +121,7 @@ function extractMatchupData(matchup, teams)
         case ("UNDECIDED"):
         {
             string += `
+            ${matchupPrefix}
             <img src=${awayTeamLogo} class="inline-logo" /> 
             <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
             versus 
@@ -129,7 +136,15 @@ function extractMatchupData(matchup, teams)
     }
 
     div = document.getElementById(`matchup-period-container-${matchupPeriodId}`);
-    div.innerHTML += `<div class="matchup-container">${string}</div>`;
+    
+    if (isChampionshipMatch(matchup.playoffTierType))
+    {
+        div.innerHTML += `<div class="matchup-container championship-match">${string}</div>`;
+    }
+    else
+    {
+        div.innerHTML += `<div class="matchup-container">${string}</div>`;
+    }
 }
 
 select2024Button.addEventListener("click", showData);
@@ -150,6 +165,7 @@ function showData(event)
         .then((res) => res.json())
         .then((data) => 
         {
+            console.log(`Raw data export from function (${year}):`, data);
             displayScheduleData(data);
         })
         .catch((err) => { 
@@ -168,15 +184,20 @@ function determineMatchupBadge(awayPoints, homePoints)
     let badgeText = "";
     let matchupBadge = "";
 
-    if (awayPoints - homePoints >= 50 || homePoints - awayPoints >= 50)
+    if (awayPoints === homePoints)
     {
-        badge = "💪";
-        badgeText = "Dominated!";
+        badge = "⁉️";
+        badgeText = "Matchup ended in a tie! What are the odds!";
+    }
+    else if (awayPoints - homePoints > 50 || homePoints - awayPoints > 50)
+    {
+        badge = "💪🏼";
+        badgeText = "Dominated! Match was decided by over 50 points!";
     }
     else if (Math.abs(awayPoints - homePoints) <= 3)
     {
-        badge = "😅";
-        badgeText = "Close call!";
+        badge = "💦";
+        badgeText = "Close call! Match was decided by less than 3 points!";
     }
 
     if (badge)
@@ -186,6 +207,71 @@ function determineMatchupBadge(awayPoints, homePoints)
 
     return matchupBadge;
 }
+
+function determineMatchupPrefix(type)
+{
+    let prefix = "";
+    let prefixText = "";
+
+    switch (type)
+    {
+        case ("WINNERS_BRACKET"):
+            prefix = "🏆";
+            prefixText = "Championship Match";
+            break;
+
+        default:
+    }
+
+    if (prefix)
+    {
+        prefix = `<p class="badge" title="${prefixText}">${prefix}</p>`;
+    }
+
+    return prefix;
+}
+
+function isChampionshipMatch(matchType)
+{
+    return matchType == "WINNERS_BRACKET";
+}
+
+function displayTopPlayers(event)
+{
+    const teamId = event.target.teamId;
+    const scoringPeriod = event.target.scoringPeriod;
+
+    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?forTeamId=${teamId}&scoringPeriodId=${scoringPeriod}&view=mRoster`;
+
+    fetch(url)
+        .then((res) => res.json())
+        .then((data) => 
+        {
+            console.log(`Raw data export from function (${teamId} ${scoringPeriod}):`, data);
+            findTopPlayers(data);
+        })
+        .catch((err) => { 
+            console.log("Error logged: ", err); 
+        });
+}
+
+function findTopPlayers(data)
+{
+    const roster = data.teams[0].roster.entries;
+    
+    roster.forEach((rosterSpot) => {
+        const player = rosterSpot.playerPoolEntry.player;
+        const { fullName, proTeamId } = player;
+
+        console.log(fullName, proTeamId); 
+    });
+
+    console.log(roster);
+}
+
+testButton.addEventListener("click", displayTopPlayers);
+testButton.teamId = 1;
+testButton.scoringPeriod = 25;
 
 // Unused code:
 

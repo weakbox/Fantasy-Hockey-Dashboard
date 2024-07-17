@@ -5,7 +5,7 @@
 :root {
   --main-bg-color: rgb(24, 85, 121);
   --secondary-bg-color: rgb(200, 233, 255);
-
+  --championship-bg-color: rgb(255, 243, 178);
 }
 
 header {
@@ -76,6 +76,11 @@ body {
 
 .badge {
   display: inline;
+  cursor: help;
+}
+
+.championship-match {
+  background-color: var(--championship-bg-color);
 }
 
 /* Media queries need to be below CSS declarations! */
