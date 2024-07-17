@@ -63,6 +63,15 @@ body {
   width: fit-content;
 }
 
+.year-button {
+  width: 25%;
+  background-color: white;
+  margin: 5px;
+  border-radius: 5px;
+  padding: 8px;
+  font-family: Inter, sans-serif;
+}
+
 /* Media queries need to be below CSS declarations! */
 @media only screen and (max-width: 600px) {
   .result-container {
