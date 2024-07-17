@@ -17,7 +17,8 @@ fetch(scoreboardUrl)
     })
     .catch((err) => { 
         console.log("Error logged: ", err); 
-    });
+    })
+;
 
 function displayScheduleData(data) 
 {
@@ -73,10 +74,13 @@ function extractMatchupData(matchup, teams)
 
     let string = "";
 
+    const matchupBadge = determineMatchupBadge(awayTotalPoints, homeTotalPoints);
+
     switch (winner)
     {
         case ("AWAY"):
             string += `
+            ${matchupBadge}
             <img src=${awayTeamLogo} class="inline-logo" /> 
             <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
             defeated 
@@ -87,6 +91,7 @@ function extractMatchupData(matchup, teams)
 
         case ("HOME"):       
             string += `
+            ${matchupBadge}
             <img src=${homeTeamLogo} class="inline-logo" /> 
             <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
             defeated 
@@ -155,6 +160,31 @@ function showData(event)
 function clearData()
 {
     result.innerHTML = "";
+}
+
+function determineMatchupBadge(awayPoints, homePoints)
+{
+    let badge = "";
+    let badgeText = "";
+    let matchupBadge = "";
+
+    if (awayPoints - homePoints >= 50 || homePoints - awayPoints >= 50)
+    {
+        badge = "💪";
+        badgeText = "Dominated!";
+    }
+    else if (Math.abs(awayPoints - homePoints) <= 3)
+    {
+        badge = "😅";
+        badgeText = "Close call!";
+    }
+
+    if (badge)
+    {
+        matchupBadge = `<p class="badge" title="${badgeText}">${badge}</p>`;
+    }
+
+    return matchupBadge;
 }
 
 // Unused code:

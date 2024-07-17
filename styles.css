@@ -73,6 +73,10 @@ body {
   color: black;
 }
 
+.badge {
+  display: inline;
+}
+
 /* Media queries need to be below CSS declarations! */
 @media only screen and (max-width: 600px) {
   .result-container {
