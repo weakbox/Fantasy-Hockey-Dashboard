@@ -1,6 +1,6 @@
-/* * {
+* {
   border: 1px solid red;
-} */
+}
 
 :root {
   --main-bg-color: rgb(161, 193, 206);
@@ -10,12 +10,12 @@ header {
   text-align: center;
   background-color: white;
   border-radius: 5px;
-  margin: 10px;
+  margin: 5px;
   padding: 8px;
 }
 
 body {
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   text-align: center;
   background-color: var(--main-bg-color)
 }
@@ -24,24 +24,27 @@ body {
   max-width: 10%;
 }
 
-hr {
-  width: 70%;
-  color: rgb(207, 234, 243);
-}
-
 .inline-logo {
   display: inline;
   width: 25px;
   vertical-align: middle;
 }
 
-.week {
-  font-size: 1.5em;
-}
-
 .matchup-container {
-  margin: 10px;
+  margin: 5px;
   background:white;
   border-radius: 5px;
   padding: 8px;
+}
+
+.result-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Media queries need to be below CSS declarations! */
+@media only screen and (max-width: 600px) {
+  .result-container {
+    grid-template-columns: repeat(1, 1fr);
   }
+}
