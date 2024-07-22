@@ -186,6 +186,9 @@ function extractMatchupData(matchup, teams)
         const awayPointsArr = awayTeam['pointsByScoringPeriod'];
         const homePointsArr = homeTeam['pointsByScoringPeriod'];
 
+        populateMissingKeysInMatchupObject(awayPointsArr, matchupPeriodId, 2024);
+        populateMissingKeysInMatchupObject(homePointsArr, matchupPeriodId, 2024);
+
         // Defer the chart creation to ensure the DOM is updated TODO: Understand this!
         setTimeout(() => {
             const context = document.getElementById(`chart-${matchupPeriodId}`);
@@ -304,21 +307,6 @@ function isChampionshipMatch(matchType)
     return matchType == "WINNERS_BRACKET";
 }
 
-function pointsObjToArr(obj)
-{
-    let pointsArr = [];
-    const keysArr = Object.keys(obj);
-    
-    keysArr.forEach((key) => 
-    {
-        pointsArr.push(obj[key]);
-    });
-    
-    console.log("Debug:", obj, pointsArr);
-
-    return pointsArr;
-}
-
 function getMatchupPeriodLengths(data, year)
 {
     // Dummy entry to avoid an off-by-one error:
@@ -391,4 +379,20 @@ function getMaxKey(keyArray)
     const keys = Object.keys(keyArray);
 
     return Number(keys[keys.length - 1]);
+}
+
+function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchupPeriodId, year)
+{
+    const { start, end } = scheduleCache[year].matchupPeriodInfo[matchupPeriodId];
+
+    for (let i = start; i <= end; i++)
+    {
+        if (!pointsByScoringPeriodObject.hasOwnProperty(i))
+        {
+            pointsByScoringPeriodObject[i] = 0;
+            console.log("Hit:", matchupPeriodId);
+        }
+    }
+
+    return pointsByScoringPeriodObject;
 }
