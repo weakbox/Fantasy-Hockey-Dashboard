@@ -22,6 +22,10 @@ body {
   background-color: var(--main-bg-color);
 }
 
+canvas {
+  background-color: white;
+}
+
 .team-logo {
   max-width: 10%;
 }

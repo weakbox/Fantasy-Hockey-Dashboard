@@ -198,12 +198,14 @@ function extractMatchupData(matchup, teams)
                 datasets: [{
                     label: `${homeTeamName} Points`,
                     data: homePointsArr,
-                    borderWidth: 1
+                    borderWidth: 3,
+                    borderColor: getTeamColorById(awayTeam.teamId),
                 },
                 {
                     label: `${awayTeamName} Points`,
                     data: awayPointsArr,
-                    borderWidth: 1
+                    borderWidth: 3,
+                    borderColor: getTeamColorById(homeTeam.teamId),
                 }],
                 
             },
@@ -394,4 +396,22 @@ function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchup
     }
 
     return pointsByScoringPeriodObject;
+}
+
+function getTeamColorById(teamId)
+{
+    const colors = [
+        "#000000",
+        "#ff6600",
+        "#33cc33",
+        "#cc6600",
+        "#666699",
+        "#000099",
+        "#ffcc00",
+        "#ff0000",
+        "#6600ff",
+        "#00ccff",
+        "#663300",
+    ];
+    return colors[teamId];
 }
