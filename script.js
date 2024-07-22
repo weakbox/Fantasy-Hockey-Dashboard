@@ -1,25 +1,39 @@
+// For use within the Stick & Puck Fantasy Hockey League
+// Code written and maintained by Connor McLeod
+
 const result = document.getElementById("result");
 const select2024Button = document.getElementById("select-2024-button");
 const select2025Button = document.getElementById("select-2025-button");
-const testButton = document.getElementById("test-button");
 
-const defaultYear = 2025;
+// Onclick declarations:
 
-// const draftUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?view=mDraftDetail&view=mSettings&view=mTeam&view=modular&view=mNav";
-// const playersUrl = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/players?scoringPeriodId=0&view=players_wl";
-const scoreboardUrl = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${defaultYear}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
+select2024Button.addEventListener("click", showData);
+select2024Button.year = 2024;
 
-// Fetch schedule information:
-fetch(scoreboardUrl)
-    .then((res) => res.json())
-    .then((data) => {
-        // console.log("Raw data: ", data);
-        displayScheduleData(data);
-    })
-    .catch((err) => { 
-        console.log("Error logged: ", err); 
-    })
-;
+select2025Button.addEventListener("click", showData);
+select2025Button.year = 2025;
+
+// Default behavior:
+
+const defaultYear = 2024;
+fetchScheduleData(defaultYear);
+
+async function fetchScheduleData(year)
+{
+  const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
+
+  try 
+  {
+    const result = await fetch(url);
+    const data = await result.json();
+    displayScheduleData(data);
+  } 
+  catch (error) 
+  {
+    alert(`Something went wrong when trying to fetch the data for year "${year}".`);
+    console.log(error);
+  }
+}
 
 function displayScheduleData(data) 
 {
@@ -147,12 +161,6 @@ function extractMatchupData(matchup, teams)
     }
 }
 
-select2024Button.addEventListener("click", showData);
-select2024Button.year = 2024;
-
-select2025Button.addEventListener("click", showData);
-select2025Button.year = 2025;
-
 function showData(event)
 {
     const year = event.target.year;
@@ -236,45 +244,6 @@ function isChampionshipMatch(matchType)
     return matchType == "WINNERS_BRACKET";
 }
 
-function displayTopPlayers(event)
-{
-    const teamId = event.target.teamId;
-    const scoringPeriod = event.target.scoringPeriod;
-
-    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/2024/segments/0/leagues/869377698?forTeamId=${teamId}&scoringPeriodId=${scoringPeriod}&view=mRoster`;
-
-    fetch(url)
-        .then((res) => res.json())
-        .then((data) => 
-        {
-            console.log(`Raw data export from function (${teamId} ${scoringPeriod}):`, data);
-            findTopPlayers(data);
-        })
-        .catch((err) => { 
-            console.log("Error logged: ", err); 
-        });
-}
-
-function findTopPlayers(data)
-{
-    const roster = data.teams[0].roster.entries;
-    
-    roster.forEach((rosterSpot) => {
-        const player = rosterSpot.playerPoolEntry.player;
-        const { fullName, proTeamId } = player;
-
-        console.log(fullName, proTeamId); 
-    });
-
-    console.log(roster);
-}
-
-testButton.addEventListener("click", displayTopPlayers);
-testButton.teamId = 1;
-testButton.scoringPeriod = 25;
-
-// Unused code:
-
 function pointsObjToArr(obj)
 {
     let pointsArr = [];
@@ -284,6 +253,6 @@ function pointsObjToArr(obj)
     {
         pointsArr.push(obj[key]);
     });
-
+    
     return pointsArr;
 }
