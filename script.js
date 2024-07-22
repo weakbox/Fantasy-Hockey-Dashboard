@@ -199,13 +199,13 @@ function extractMatchupData(matchup, teams)
                     label: `${homeTeamName} Points`,
                     data: homePointsArr,
                     borderWidth: 3,
-                    borderColor: getTeamColorById(awayTeam.teamId),
+                    borderColor: getTeamColorById(homeTeam.teamId),
                 },
                 {
                     label: `${awayTeamName} Points`,
                     data: awayPointsArr,
                     borderWidth: 3,
-                    borderColor: getTeamColorById(homeTeam.teamId),
+                    borderColor: getTeamColorById(awayTeam.teamId),
                 }],
                 
             },
