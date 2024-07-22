@@ -164,21 +164,10 @@ function extractMatchupData(matchup, teams)
 function showData(event)
 {
     const year = event.target.year;
-    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
 
     clearData();
 
-    // Fetch schedule information:
-    fetch(url)
-        .then((res) => res.json())
-        .then((data) => 
-        {
-            console.log(`Raw data export from function (${year}):`, data);
-            displayScheduleData(data);
-        })
-        .catch((err) => { 
-            console.log("Error logged: ", err); 
-        });
+    fetchScheduleData(year);
 }
 
 function clearData()
