@@ -51,7 +51,7 @@ async function fetchScheduleData(year)
     } 
     catch (error) 
     {
-    alert(`Something went wrong when trying to fetch the data for year "${year}".`);
+        alert(`Something went wrong when trying to fetch the data for year "${year}".`);
         console.log(error);
     }
 }
@@ -62,11 +62,6 @@ function displayScheduleData(data)
     const teamsArr = data['teams'];
     const activeMatchupPeriods = data['status']['currentMatchupPeriod'];
 
-    // console.log("Schedule Array: ", scheduleArr, "Length: ", scheduleArr.length);
-    // console.log("Teams Array: ", teamsArr);
-    // console.log(`Found ${activeMatchupPeriods} active matchup periods.`);
-
-    // Extract data from each matchup period one at a time.
     for (let i = 1; i <= activeMatchupPeriods; i++)
     {
         matchupPeriodScheduleArr = scheduleArr.filter((matchup) => matchup['matchupPeriodId'] === i);
@@ -105,8 +100,8 @@ function extractMatchupData(matchup, teams)
     const homeTotalPoints = homeTeam['totalPoints'];
 
     // TODO: Fix this code block when viewing data from 2025.
-    // const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
-    // const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
+    const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
+    const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
 
     let string = "";
 
@@ -180,6 +175,70 @@ function extractMatchupData(matchup, teams)
     {
         div.innerHTML += `<div class="matchup-container">${string}</div>`;
     }
+
+    // Chart test:
+    if (homeTeamName === "Egg United") {
+        result.innerHTML += `
+            <div>
+                <canvas id="chart-${matchupPeriodId}" width="200" height="200"></canvas>
+            </div>
+        `;
+
+        console.log(homePointsArr);
+
+        // Defer the chart creation to ensure the DOM is updated TODO: Understand this!
+        setTimeout(() => {
+            const context = document.getElementById(`chart-${matchupPeriodId}`);
+
+            new Chart(context, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Egg United Points',
+                        data: cumSum(homePointsArr),
+                        borderWidth: 1
+                    },
+                    {
+                        label: `${awayTeamName} Points`,
+                        data: cumSum(awayPointsArr),
+                        borderWidth: 1
+                    }],
+                    labels: createNumberedLabels(homePointsArr.length),
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }, 0);
+    }
+}
+
+function createNumberedLabels(length)
+{
+    let labels = [];
+
+    for (let i = 0; i < length; i++)
+    {
+        labels.push(i + 1);
+    }
+
+    return labels;
+}
+
+function cumSum(array)
+{
+    let cumSumArray = [array[0]];
+
+    for (let i = 1; i < array.length; i++)
+    {
+        cumSumArray.push(array[i] + cumSumArray[i - 1]);
+    }
+
+    return cumSumArray;
 }
 
 function clearData()
