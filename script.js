@@ -18,12 +18,12 @@ select2024Button.addEventListener("click", (event) =>
 });
 
 select2025Button.year = 2025;
-select2025Button.addEventListener("click", (event) =>
-{
-    const year = event.target.year;
-    clearData();
-    fetchScheduleData(year);
-});
+// select2025Button.addEventListener("click", (event) =>
+// {
+//     const year = event.target.year;
+//     clearData();
+//     fetchScheduleData(year);
+// });
 
 // Default behavior:
 
@@ -174,50 +174,49 @@ function extractMatchupData(matchup, teams)
         div.innerHTML += `<div class="matchup-container">${string}</div>`;
     }
 
-    // Chart test:
-    if (homeTeamName === "Egg United" || awayTeamName === "Egg United") {
-        result.innerHTML += `
-            <div>
-                <canvas id="chart-${matchupPeriodId}" width="200" height="200"></canvas>
-            </div>
-        `;
+    // **************** Chart test: ********************
+    result.innerHTML += `
+        <div>
+            <canvas id="chart-${matchupPeriodId}-${awayTeamName}-${homeTeamName}" width="200" height="200"></canvas>
+        </div>
+    `;
 
-        // TODO: Fix this code block when viewing data from 2025:
-        const awayPointsArr = awayTeam['pointsByScoringPeriod'];
-        const homePointsArr = homeTeam['pointsByScoringPeriod'];
+    // TODO: Fix this code block when viewing data from 2025:
+    const awayPointsArr = awayTeam['pointsByScoringPeriod'];
+    const homePointsArr = homeTeam['pointsByScoringPeriod'];
 
-        populateMissingKeysInMatchupObject(awayPointsArr, matchupPeriodId, 2024);
-        populateMissingKeysInMatchupObject(homePointsArr, matchupPeriodId, 2024);
+    populateMissingKeysInMatchupObject(awayPointsArr, matchupPeriodId, 2024);
+    populateMissingKeysInMatchupObject(homePointsArr, matchupPeriodId, 2024);
 
-        // Defer the chart creation to ensure the DOM is updated TODO: Understand this!
-        setTimeout(() => {
-            const context = document.getElementById(`chart-${matchupPeriodId}`);
+    // Defer the chart creation to ensure the DOM is updated TODO: Understand this!
+    setTimeout(() => {
+        const context = document.getElementById(`chart-${matchupPeriodId}-${awayTeamName}-${homeTeamName}`);
 
-            new Chart(context, {
-                type: 'line',
-                data: {
-                    datasets: [{
-                        label: `${homeTeamName} Points`,
-                        data: homePointsArr,
-                        borderWidth: 1
-                    },
-                    {
-                        label: `${awayTeamName} Points`,
-                        data: awayPointsArr,
-                        borderWidth: 1
-                    }],
-                    
+        new Chart(context, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: `${homeTeamName} Points`,
+                    data: homePointsArr,
+                    borderWidth: 1
                 },
-                options: {
-                    scales: {
-                        y: {
-                            // beginAtZero: true
-                        }
+                {
+                    label: `${awayTeamName} Points`,
+                    data: awayPointsArr,
+                    borderWidth: 1
+                }],
+                
+            },
+            options: {
+                scales: {
+                    y: {
+                        // beginAtZero: true
                     }
-                },
-            });
-        }, 0);
-    }
+                }
+            },
+        });
+    }, 0);
+
 }
 
 function createNumberedLabels(length)
