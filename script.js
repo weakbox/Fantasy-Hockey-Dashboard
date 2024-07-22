@@ -5,13 +5,25 @@ const result = document.getElementById("result");
 const select2024Button = document.getElementById("select-2024-button");
 const select2025Button = document.getElementById("select-2025-button");
 
-// Onclick declarations:
+const scheduleCache = {};
 
-select2024Button.addEventListener("click", showData);
+// Onclick declarations (can be function-atized):
+
 select2024Button.year = 2024;
+select2024Button.addEventListener("click", (event) =>
+{
+    const year = event.target.year;
+    clearData();
+    fetchScheduleData(year);
+});
 
-select2025Button.addEventListener("click", showData);
 select2025Button.year = 2025;
+select2025Button.addEventListener("click", (event) =>
+{
+    const year = event.target.year;
+    clearData();
+    fetchScheduleData(year);
+});
 
 // Default behavior:
 
@@ -20,19 +32,28 @@ fetchScheduleData(defaultYear);
 
 async function fetchScheduleData(year)
 {
-  const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
+    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
 
-  try 
-  {
-    const result = await fetch(url);
-    const data = await result.json();
-    displayScheduleData(data);
-  } 
-  catch (error) 
-  {
+    // Use cache if data has already been fetched:
+    if (scheduleCache[year])
+    {
+        displayScheduleData(scheduleCache[year]);
+        return;
+    }
+
+    // Fetch if data was not present in the cache:
+    try 
+    {
+        const result = await fetch(url);
+        const data = await result.json();
+        scheduleCache[year] = data;
+        displayScheduleData(data);
+    } 
+    catch (error) 
+    {
     alert(`Something went wrong when trying to fetch the data for year "${year}".`);
-    console.log(error);
-  }
+        console.log(error);
+    }
 }
 
 function displayScheduleData(data) 
@@ -159,15 +180,6 @@ function extractMatchupData(matchup, teams)
     {
         div.innerHTML += `<div class="matchup-container">${string}</div>`;
     }
-}
-
-function showData(event)
-{
-    const year = event.target.year;
-
-    clearData();
-
-    fetchScheduleData(year);
 }
 
 function clearData()
