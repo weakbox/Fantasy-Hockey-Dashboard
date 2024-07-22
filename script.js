@@ -47,7 +47,9 @@ async function fetchScheduleData(year)
         const result = await fetch(url);
         const data = await result.json();
         scheduleCache[year] = data;
+        getMatchupPeriodLengths(data, year);
         displayScheduleData(data);
+        console.log(scheduleCache);
     } 
     catch (error) 
     {
@@ -98,10 +100,6 @@ function extractMatchupData(matchup, teams)
 
     const awayTotalPoints = awayTeam['totalPoints'];
     const homeTotalPoints = homeTeam['totalPoints'];
-
-    // TODO: Fix this code block when viewing data from 2025.
-    const awayPointsArr = pointsObjToArr(awayTeam['pointsByScoringPeriod']);
-    const homePointsArr = pointsObjToArr(homeTeam['pointsByScoringPeriod']);
 
     let string = "";
 
@@ -177,14 +175,16 @@ function extractMatchupData(matchup, teams)
     }
 
     // Chart test:
-    if (homeTeamName === "Egg United") {
+    if (homeTeamName === "Egg United" || awayTeamName === "Egg United") {
         result.innerHTML += `
             <div>
                 <canvas id="chart-${matchupPeriodId}" width="200" height="200"></canvas>
             </div>
         `;
 
-        console.log(homePointsArr);
+        // TODO: Fix this code block when viewing data from 2025:
+        const awayPointsArr = awayTeam['pointsByScoringPeriod'];
+        const homePointsArr = homeTeam['pointsByScoringPeriod'];
 
         // Defer the chart creation to ensure the DOM is updated TODO: Understand this!
         setTimeout(() => {
@@ -194,24 +194,24 @@ function extractMatchupData(matchup, teams)
                 type: 'line',
                 data: {
                     datasets: [{
-                        label: 'Egg United Points',
-                        data: cumSum(homePointsArr),
+                        label: `${homeTeamName} Points`,
+                        data: homePointsArr,
                         borderWidth: 1
                     },
                     {
                         label: `${awayTeamName} Points`,
-                        data: cumSum(awayPointsArr),
+                        data: awayPointsArr,
                         borderWidth: 1
                     }],
-                    labels: createNumberedLabels(homePointsArr.length),
+                    
                 },
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            // beginAtZero: true
                         }
                     }
-                }
+                },
             });
         }, 0);
     }
@@ -314,5 +314,81 @@ function pointsObjToArr(obj)
         pointsArr.push(obj[key]);
     });
     
+    console.log("Debug:", obj, pointsArr);
+
     return pointsArr;
+}
+
+function getMatchupPeriodLengths(data, year)
+{
+    // Dummy entry to avoid an off-by-one error:
+    let matchupPeriodInfo = [
+        {
+            period: 0,
+            length: 0,
+            start: undefined,
+            end: undefined,
+        }
+    ];
+
+    const latestMatchupPeriod = data.status.currentMatchupPeriod;
+    const matchups = data.schedule;
+
+    for (let i = 1; i <= latestMatchupPeriod; i++)
+    {
+        const matchupsInMatchupPeriod = matchups.filter((match) => match.matchupPeriodId === i);
+
+        let startArray = [];
+        let endArray = [];
+
+        matchupsInMatchupPeriod.forEach((match) => 
+        {
+            // Example of optional chaining:
+            const awayKeys = match.away?.pointsByScoringPeriod;
+            const homeKeys = match.home?.pointsByScoringPeriod;
+
+            if (!homeKeys)
+            {
+                return;
+            }
+
+            startArray.push(getMinKey(homeKeys));
+            endArray.push(getMaxKey(homeKeys));
+
+            if (!awayKeys)
+            {
+                return;
+            }
+
+            startArray.push(getMinKey(awayKeys));
+            endArray.push(getMaxKey(awayKeys));
+        });
+
+        const start = startArray.reduce((a, b) => Math.min(a, b));
+        const end = endArray.reduce((a, b) => Math.max(a, b));
+        const length = (end + 1) - start;
+
+        let info = {};
+
+        info['period'] = i;
+        info['start'] = start;
+        info['end'] = end;
+        info['length'] = length;
+
+        matchupPeriodInfo.push(info);
+    }
+    
+    scheduleCache[year]['matchupPeriodInfo'] = matchupPeriodInfo;
+}
+
+function getMinKey(keyArray)
+{
+    return Number(Object.keys(keyArray)[0]);
+}
+
+function getMaxKey(keyArray)
+{
+    const keys = Object.keys(keyArray);
+
+    return Number(keys[keys.length - 1]);
 }
