@@ -59,11 +59,16 @@ function displayScheduleData(data)
     {
         matchupPeriodScheduleArr = scheduleArr.filter((matchup) => matchup['matchupPeriodId'] === i);
 
-        result.innerHTML += `
-            <div id="matchup-period-container-${i}" class="matchup-period-container">
-                <p class="bubble"><strong>Matchup ${i}</strong></p>
-            <div>
-        `;
+        const periodContainer = document.createElement('div');
+        periodContainer.id = `matchup-period-container-${i}`;
+        periodContainer.classList.add('matchup-period-container');
+
+        const periodTitle = document.createElement('p');
+        periodTitle.classList.add('bubble');
+        periodTitle.innerHTML = `<strong>Matchup ${i}</strong>`;
+
+        periodContainer.appendChild(periodTitle);
+        result.appendChild(periodContainer);
 
         matchupPeriodScheduleArr.forEach((matchup) => extractMatchupData(matchup, teamsArr));
     }
