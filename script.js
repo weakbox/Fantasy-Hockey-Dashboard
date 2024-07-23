@@ -183,11 +183,11 @@ function extractMatchupData(matchup, teams)
     // Chart has to be deffered to allow the DOM to update:
     setTimeout(() => 
     {
-        plotCumulativeLineChart(canvasID, awayName, homeName, awayPointsByScoringPeriod, homePointsByScoringPeriod);
+        plotCumulativeLineChart(canvasID, awayName, homeName, awayTeamId, homeTeamId, awayPointsByScoringPeriod, homePointsByScoringPeriod);
     }, 0);
 }
 
-function plotCumulativeLineChart(canvasId, awayName, homeName, awayPoints, homePoints)
+function plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, awayPoints, homePoints)
 {
     const context = document.getElementById(`${canvasId}`).getContext('2d');
 
@@ -202,16 +202,30 @@ function plotCumulativeLineChart(canvasId, awayName, homeName, awayPoints, homeP
             datasets: [{
                 label: `${awayName} Points`,
                 data: cumSum(awayPoints),
-                borderWidth: 3,
+                backgroundColor: getTeamColorById(awayId),
+                borderColor: getTeamColorById(awayId),
+                pointBackgroundColor: getTeamColorById(awayId),
+                pointBorderColor: getTeamColorById(awayId),
+                borderWidth: 4,
             },
             {
                 label: `${homeName} Points`,
                 data: cumSum(homePoints),
-                borderWidth: 3,
+                backgroundColor: getTeamColorById(homeId),
+                borderColor: getTeamColorById(homeId),
+                pointBackgroundColor: getTeamColorById(homeId),
+                pointBorderColor: getTeamColorById(homeId),
+                borderWidth: 4,
             }],
         },
         options: {
             responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Cumulative Points",
+                }
+            }
         },
     });
 }
@@ -406,9 +420,4 @@ function cumSum(array)
     }
 
     return cumSumArray;
-}
-
-function pointsArrayToObject()
-{
-
 }
