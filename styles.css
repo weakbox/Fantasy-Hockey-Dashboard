@@ -24,6 +24,9 @@ body {
 
 canvas {
   background-color: white;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 8px;
 }
 
 .team-logo {

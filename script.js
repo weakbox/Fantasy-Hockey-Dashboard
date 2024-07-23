@@ -174,7 +174,7 @@ function extractMatchupData(matchup, teams)
     // Plot chart:
     const canvasID = `chart-${matchupPeriodId}-${awayName}-${homeName}`;
 
-    result.innerHTML += `
+    div.innerHTML += `
         <div>
             <canvas id="${canvasID}" width="200" height="200"></canvas>
         </div>
@@ -210,7 +210,9 @@ function plotCumulativeLineChart(canvasId, awayName, homeName, awayPoints, homeP
                 borderWidth: 3,
             }],
         },
-        options: {},
+        options: {
+            responsive: true,
+        },
     });
 }
 
