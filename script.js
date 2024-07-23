@@ -3,7 +3,6 @@
 
 const result = document.getElementById("result");
 const select2024Button = document.getElementById("select-2024-button");
-const select2025Button = document.getElementById("select-2025-button");
 
 const scheduleCache = {};
 
@@ -16,14 +15,6 @@ select2024Button.addEventListener("click", (event) =>
     clearData();
     fetchScheduleData(year);
 });
-
-select2025Button.year = 2025;
-// select2025Button.addEventListener("click", (event) =>
-// {
-//     const year = event.target.year;
-//     clearData();
-//     fetchScheduleData(year);
-// });
 
 // Default behavior:
 
@@ -80,31 +71,37 @@ function displayScheduleData(data)
 
 function extractMatchupData(matchup, teams)
 {   
-    const { matchupPeriodId, winner } = matchup;
+    const { away: awayStats = null, home: homeStats, matchupPeriodId, playoffTierType, winner } = matchup;
 
-    const awayTeam = matchup?.away ?? null;
-    const homeTeam = matchup['home'];
-
-    // Check if match was actually a bye-week.
-    if (awayTeam == null || homeTeam == null)
+    // Return if matchup was a bye-week:
+    if (!awayStats)
     {
         return;
     }
+
+    const { teamId: awayTeamId, totalPoints: awayTotalPoints } = awayStats;
+    const { teamId: homeTeamId, totalPoints: homeTotalPoints } = homeStats;
+
+    let { pointsByScoringPeriod: awayPointsByScoringPeriod } = awayStats;
+    let { pointsByScoringPeriod: homePointsByScoringPeriod } = homeStats;
+
+    awayPointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(awayPointsByScoringPeriod, matchupPeriodId, 2024));
+    homePointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(homePointsByScoringPeriod, matchupPeriodId, 2024));
+
+    const awayTeam = teams.find((team) => team['id'] === awayTeamId);
+    const homeTeam = teams.find((team) => team['id'] === homeTeamId);
     
-    const awayTeamName = teams.find((team) => team['id'] == awayTeam['teamId'])['name'];
-    const homeTeamName = teams.find((team) => team['id'] == homeTeam['teamId'])['name'];
+    const { abbrev: awayAbbrev, logo: awayLogo, name: awayName,  } = awayTeam;
+    const { abbrev: homeAbbrev, logo: homeLogo, name: homeName,  } = homeTeam;
 
-    // TODO: Fix this repetitive code.
-    const awayTeamLogo =  teams.find((team) => team['id'] == awayTeam['teamId'])['logo'];
-    const homeTeamLogo =  teams.find((team) => team['id'] == homeTeam['teamId'])['logo'];
+    // console.log("Debug:", awayName, awayPointsByScoringPeriod, winner, matchupPeriodId);
 
-    const awayTotalPoints = awayTeam['totalPoints'];
-    const homeTotalPoints = homeTeam['totalPoints'];
-
-    let string = "";
+    // Data extraction complete:
 
     const matchupBadge = determineMatchupBadge(awayTotalPoints, homeTotalPoints);
-    const matchupPrefix = determineMatchupPrefix(matchup.playoffTierType);
+    const matchupPrefix = determineMatchupPrefix(playoffTierType);
+
+    let string = "";
 
     switch (winner)
     {
@@ -112,11 +109,11 @@ function extractMatchupData(matchup, teams)
             string += `
             ${matchupPrefix}
             ${matchupBadge}
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+            <img src=${awayLogo} class="inline-logo" /> 
+            <strong>${awayName}</strong> (${awayTotalPoints}) 
             defeated 
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            <img src=${homeLogo} class="inline-logo" /> 
+            <strong>${homeName}</strong> (${homeTotalPoints}) 
             `;
             break;
 
@@ -124,11 +121,11 @@ function extractMatchupData(matchup, teams)
             string += `
             ${matchupPrefix}
             ${matchupBadge}
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            <img src=${homeLogo} class="inline-logo" /> 
+            <strong>${homeName}</strong> (${homeTotalPoints}) 
             defeated 
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints})
+            <img src=${awayLogo} class="inline-logo" /> 
+            <strong>${awayName}</strong> (${awayTotalPoints})
             `;
             break;
 
@@ -137,11 +134,11 @@ function extractMatchupData(matchup, teams)
             ${matchupPrefix}
             ${matchupBadge}
             The matchup between 
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+            <img src=${awayLogo} class="inline-logo" /> 
+            <strong>${awayName}</strong> (${awayTotalPoints}) 
             and 
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            <img src=${homeLogo} class="inline-logo" /> 
+            <strong>${homeName}</strong> (${homeTotalPoints}) 
             ended in a tie!
             `;
             break;
@@ -150,11 +147,11 @@ function extractMatchupData(matchup, teams)
         {
             string += `
             ${matchupPrefix}
-            <img src=${awayTeamLogo} class="inline-logo" /> 
-            <strong>${awayTeamName}</strong> (${awayTotalPoints}) 
+            <img src=${awayLogo} class="inline-logo" /> 
+            <strong>${awayName}</strong> (${awayTotalPoints}) 
             versus 
-            <img src=${homeTeamLogo} class="inline-logo" /> 
-            <strong>${homeTeamName}</strong> (${homeTotalPoints}) 
+            <img src=${homeLogo} class="inline-logo" /> 
+            <strong>${homeName}</strong> (${homeTotalPoints}) 
             `;
             break;
         }
@@ -165,7 +162,7 @@ function extractMatchupData(matchup, teams)
 
     div = document.getElementById(`matchup-period-container-${matchupPeriodId}`);
     
-    if (isChampionshipMatch(matchup.playoffTierType))
+    if (isChampionshipMatch(playoffTierType))
     {
         div.innerHTML += `<div class="matchup-container championship-match">${string}</div>`;
     }
@@ -174,75 +171,47 @@ function extractMatchupData(matchup, teams)
         div.innerHTML += `<div class="matchup-container">${string}</div>`;
     }
 
-    // **************** Chart test: ********************
+    // Plot chart:
+    const canvasID = `chart-${matchupPeriodId}-${awayName}-${homeName}`;
+
     result.innerHTML += `
         <div>
-            <canvas id="chart-${matchupPeriodId}-${awayTeamName}-${homeTeamName}" width="200" height="200"></canvas>
+            <canvas id="${canvasID}" width="200" height="200"></canvas>
         </div>
     `;
 
-    // TODO: Fix this code block when viewing data from 2025:
-    const awayPointsArr = awayTeam['pointsByScoringPeriod'];
-    const homePointsArr = homeTeam['pointsByScoringPeriod'];
-
-    populateMissingKeysInMatchupObject(awayPointsArr, matchupPeriodId, 2024);
-    populateMissingKeysInMatchupObject(homePointsArr, matchupPeriodId, 2024);
-
-    // Defer the chart creation to ensure the DOM is updated TODO: Understand this!
-    setTimeout(() => {
-        const context = document.getElementById(`chart-${matchupPeriodId}-${awayTeamName}-${homeTeamName}`);
-
-        new Chart(context, {
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: `${homeTeamName} Points`,
-                    data: homePointsArr,
-                    borderWidth: 3,
-                    borderColor: getTeamColorById(homeTeam.teamId),
-                },
-                {
-                    label: `${awayTeamName} Points`,
-                    data: awayPointsArr,
-                    borderWidth: 3,
-                    borderColor: getTeamColorById(awayTeam.teamId),
-                }],
-                
-            },
-            options: {
-                scales: {
-                    y: {
-                        // beginAtZero: true
-                    }
-                }
-            },
-        });
+    // Chart has to be deffered to allow the DOM to update:
+    setTimeout(() => 
+    {
+        plotCumulativeLineChart(canvasID, awayName, homeName, awayPointsByScoringPeriod, homePointsByScoringPeriod);
     }, 0);
-
 }
 
-function createNumberedLabels(length)
+function plotCumulativeLineChart(canvasId, awayName, homeName, awayPoints, homePoints)
 {
+    const context = document.getElementById(`${canvasId}`).getContext('2d');
+
+    // Dynamically create chart labels:
     let labels = [];
+    labels = awayPoints.map((_, index) => labels[index] = `Day ${index + 1}`);
 
-    for (let i = 0; i < length; i++)
-    {
-        labels.push(i + 1);
-    }
-
-    return labels;
-}
-
-function cumSum(array)
-{
-    let cumSumArray = [array[0]];
-
-    for (let i = 1; i < array.length; i++)
-    {
-        cumSumArray.push(array[i] + cumSumArray[i - 1]);
-    }
-
-    return cumSumArray;
+    new Chart(context, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `${awayName} Points`,
+                data: cumSum(awayPoints),
+                borderWidth: 3,
+            },
+            {
+                label: `${homeName} Points`,
+                data: cumSum(homePoints),
+                borderWidth: 3,
+            }],
+        },
+        options: {},
+    });
 }
 
 function clearData()
@@ -391,7 +360,7 @@ function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchup
         if (!pointsByScoringPeriodObject.hasOwnProperty(i))
         {
             pointsByScoringPeriodObject[i] = 0;
-            console.log("Hit:", matchupPeriodId);
+            // console.log("Hit:", matchupPeriodId);
         }
     }
 
@@ -414,4 +383,30 @@ function getTeamColorById(teamId)
         "#663300",
     ];
     return colors[teamId];
+}
+
+function pointsObjectToArray(pointsObject)
+{
+    let array = [];
+
+    Object.keys(pointsObject).map((key) => array.push(pointsObject[key]));
+
+    return array;
+}
+
+function cumSum(array)
+{
+    let cumSumArray = [array[0]];
+
+    for (let i = 1; i < array.length; i++)
+    {
+        cumSumArray.push(array[i] + cumSumArray[i - 1]);
+    }
+
+    return cumSumArray;
+}
+
+function pointsArrayToObject()
+{
+
 }
