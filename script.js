@@ -420,8 +420,9 @@ function getMatchupPeriodLengths(data, year)
             endArray.push(getMaxKey(awayKeys));
         });
 
-        const start = startArray.reduce((a, b) => Math.min(a, b));
-        const end = endArray.reduce((a, b) => Math.max(a, b));
+        const start = startArray.length > 0 ? startArray.reduce((a, b) => Math.min(a, b)) : 0;
+        const end = endArray.length > 0 ? endArray.reduce((a, b) => Math.max(a, b)) : 0;
+
         const length = (end + 1) - start;
 
         let info = {};
@@ -455,7 +456,7 @@ function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchup
 
     for (let i = start; i <= end; i++)
     {
-        if (!pointsByScoringPeriodObject.hasOwnProperty(i))
+        if (pointsByScoringPeriodObject && !pointsByScoringPeriodObject.hasOwnProperty(i))
         {
             pointsByScoringPeriodObject[i] = 0;
             // console.log("Hit:", matchupPeriodId);
@@ -467,58 +468,38 @@ function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchup
 
 function getTeamColorById(teamId)
 {
-    const colors = [
-        {
-            primary: "#000000",
-            secondary: "#000000",
-        },
-        {
-            primary: "#ff7b00",
-            secondary: "#ffbc7d",
-        },
-        {
-            primary: "#27b500",
-            secondary: "#82d96a",
-        },
-        {
-            primary: "#c4aa00",
-            secondary: "#ebda6e",
-        },
-        {
-            primary: "#748d99",
-            secondary: "#bce5f7",
-        },
-        {
-            primary: "#e600ff",
-            secondary: "#f6a1ff",
-        },
-        {
-            primary: "#ffdd00",
-            secondary: "#fff08f",
-        },
-        {
-            primary: "#ff0000",
-            secondary: "#ff8080",
-        },
-        {
-            primary: "#8e47ff",
-            secondary: "#c29cff",
-        },
-        {
-            primary: "#00eaf2",
-            secondary: "#99fcff",
-        },
-        {
-            primary: "#5c3900",
-            secondary: "#856c45",
-        },
+    const colors = 
+    [
+        { primary: "#000000", secondary: "#000000" },   /* Default case: */
+        { primary: "#ff7b00", secondary: "#ffbc7d" },
+        { primary: "#27b500", secondary: "#82d96a" },
+        { primary: "#c4aa00", secondary: "#ebda6e" },
+        { primary: "#748d99", secondary: "#bce5f7" },
+        { primary: "#0040ff", secondary: "#6b90ff" },
+        { primary: "#ffdd00", secondary: "#fff08f" },
+        { primary: "#ff0000", secondary: "#ff8080" },
+        { primary: "#8e47ff", secondary: "#c29cff" },
+        { primary: "#00eaf2", secondary: "#99fcff" },
+        { primary: "#5c3900", secondary: "#856c45" },
     ];
+
+    // Handle case where a team has not been provided a color:
+    if (teamId > colors.length - 1)
+    {
+        return colors[0];
+    }
+
     return colors[teamId];
 }
 
 function pointsObjectToArray(pointsObject)
 {
     let array = [];
+
+    if (!pointsObject)
+    {
+        return array;
+    }
 
     Object.keys(pointsObject).map((key) => array.push(pointsObject[key]));
 
