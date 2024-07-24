@@ -118,8 +118,8 @@ footer {
   color: var(--text-color);
 }
 
-footer.a {
-  color: var(--card-hover-color);
+footer a {
+  color: var(--text-color);
 }
 
 /* Media queries need to be below CSS declarations! */
