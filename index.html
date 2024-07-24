@@ -18,16 +18,19 @@
         <!-- Code written and maintained by Connor McLeod (Hello if you are reading this!) -->
         <header>
             <h1><strong>Stick & Puck Fantasy Dashboard</strong></h1>
-            <img class="logo" src="../images/logo.png">
             <p>Click any matchup to see further info.</p>
         </header>
 
-        <button id="year-select-2024" class="year-button">2024</button>
-        <button id="year-select-2025" class="year-button">2025 (Ongoing)</button>
-        
+        <div class="button-container">
+            <button id="year-select-2024" class="year-button">2024</button>
+            <button id="year-select-2025" class="year-button">2025 (Upcoming Season)</button>
+        </div>
+
         <div id="result" class="result-container"></div>
 
-        <p>Written and maintained by Connor McLeod</p>
+        <footer>
+            <p>This website was written and is maintained by <a href="www.linkedin.com/in/weakbox">Connor McLeod</a></p>
+        </footer>
 
         <!-- Import Chart.js from content delivery network (CDN): -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
