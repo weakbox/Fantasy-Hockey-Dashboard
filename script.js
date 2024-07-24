@@ -12,11 +12,8 @@ select2024Button.year = 2024;
 select2024Button.addEventListener("click", (event) =>
 {
     const year = event.target.year;
-    clearData();
     fetchScheduleData(year);
 });
-
-// Default behavior:
 
 const defaultYear = 2024;
 fetchScheduleData(defaultYear);
@@ -269,38 +266,38 @@ function plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, a
             datasets: [{
                 label: `${awayName} Cumulative Points`,
                 data: cumSum(awayPoints),
-                backgroundColor: getTeamColorById(awayId),
-                borderColor: getTeamColorById(awayId),
-                pointBackgroundColor: getTeamColorById(awayId),
-                pointBorderColor: getTeamColorById(awayId),
+                backgroundColor: getTeamColorById(awayId).primary,
+                borderColor: getTeamColorById(awayId).primary,
+                pointBackgroundColor: getTeamColorById(awayId).primary,
+                pointBorderColor: getTeamColorById(awayId).primary,
                 borderWidth: 3,
             },
             {
                 label: `${awayName} Daily Points`,
                 data: awayPoints,
-                backgroundColor: getTeamColorById(awayId),
-                borderColor: getTeamColorById(awayId),
-                pointBackgroundColor: getTeamColorById(awayId),
-                pointBorderColor: getTeamColorById(awayId),
+                backgroundColor: getTeamColorById(awayId).secondary,
+                borderColor: getTeamColorById(awayId).secondary,
+                pointBackgroundColor: getTeamColorById(awayId).secondary,
+                pointBorderColor: getTeamColorById(awayId).secondary,
                 borderWidth: 3,
                 borderDash: [5, 5],
             },
             {
                 label: `${homeName} Cumulative Points`,
                 data: cumSum(homePoints),
-                backgroundColor: getTeamColorById(homeId),
-                borderColor: getTeamColorById(homeId),
-                pointBackgroundColor: getTeamColorById(homeId),
-                pointBorderColor: getTeamColorById(homeId),
+                backgroundColor: getTeamColorById(homeId).primary,
+                borderColor: getTeamColorById(homeId).primary,
+                pointBackgroundColor: getTeamColorById(homeId).primary,
+                pointBorderColor: getTeamColorById(homeId).primary,
                 borderWidth: 3,
             },
             {
                 label: `${homeName} Daily Points`,
                 data: homePoints,
-                backgroundColor: getTeamColorById(homeId),
-                borderColor: getTeamColorById(homeId),
-                pointBackgroundColor: getTeamColorById(homeId),
-                pointBorderColor: getTeamColorById(homeId),
+                backgroundColor: getTeamColorById(homeId).secondary,
+                borderColor: getTeamColorById(homeId).secondary,
+                pointBackgroundColor: getTeamColorById(homeId).secondary,
+                pointBorderColor: getTeamColorById(homeId).secondary,
                 borderWidth: 3,
                 borderDash: [5, 5],
             },
@@ -471,17 +468,50 @@ function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchup
 function getTeamColorById(teamId)
 {
     const colors = [
-        "#000000",
-        "#ff6600",
-        "#33cc33",
-        "#cc6600",
-        "#666699",
-        "#000099",
-        "#ffcc00",
-        "#ff0000",
-        "#6600ff",
-        "#00ccff",
-        "#663300",
+        {
+            primary: "#000000",
+            secondary: "#000000",
+        },
+        {
+            primary: "#ff7b00",
+            secondary: "#ffbc7d",
+        },
+        {
+            primary: "#27b500",
+            secondary: "#82d96a",
+        },
+        {
+            primary: "#c4aa00",
+            secondary: "#ebda6e",
+        },
+        {
+            primary: "#748d99",
+            secondary: "#bce5f7",
+        },
+        {
+            primary: "#e600ff",
+            secondary: "#f6a1ff",
+        },
+        {
+            primary: "#ffdd00",
+            secondary: "#fff08f",
+        },
+        {
+            primary: "#ff0000",
+            secondary: "#ff8080",
+        },
+        {
+            primary: "#8e47ff",
+            secondary: "#c29cff",
+        },
+        {
+            primary: "#00eaf2",
+            secondary: "#99fcff",
+        },
+        {
+            primary: "#5c3900",
+            secondary: "#856c45",
+        },
     ];
     return colors[teamId];
 }
