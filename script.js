@@ -77,12 +77,15 @@ function displayScheduleData(data)
 
 function addShowAdvancedStatsClickEvent(element)
 {
-    // Add click functionality using event delegation:
+    // Example of event delegation:
     element.addEventListener("click", (event) =>
     {
-        if (event.target.classList.contains("matchup-container"))
+        // Traverse up the element until the associated matchup container is found:
+        const targetElement = event.target.closest(".matchup-container");
+
+        if (targetElement)
         {
-            toggleAdvancedStats(event.target);
+            toggleAdvancedStats(targetElement);
         }
     });
 }
@@ -243,7 +246,7 @@ function extractMatchupData(matchup, teams)
     const matchupContainer = document.createElement("div");
     matchupContainer.id = matchupContainerId;
     matchupContainer.classList.add("matchup-container");
-    matchupContainer.innerHTML = string;
+    matchupContainer.innerHTML = `<div class="prevent-highlight-cursor">${string}</div>`;
 
     // Add matchup data as a data attribute:
     matchupContainer.dataset.matchup = JSON.stringify(matchupData);
@@ -264,39 +267,57 @@ function plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, a
         data: {
             labels: labels,
             datasets: [{
-                label: `${awayName} Points`,
+                label: `${awayName} Cumulative Points`,
                 data: cumSum(awayPoints),
                 backgroundColor: getTeamColorById(awayId),
                 borderColor: getTeamColorById(awayId),
                 pointBackgroundColor: getTeamColorById(awayId),
                 pointBorderColor: getTeamColorById(awayId),
-                borderWidth: 4,
+                borderWidth: 3,
             },
             {
-                label: `${homeName} Points`,
+                label: `${awayName} Daily Points`,
+                data: awayPoints,
+                backgroundColor: getTeamColorById(awayId),
+                borderColor: getTeamColorById(awayId),
+                pointBackgroundColor: getTeamColorById(awayId),
+                pointBorderColor: getTeamColorById(awayId),
+                borderWidth: 3,
+                borderDash: [5, 5],
+            },
+            {
+                label: `${homeName} Cumulative Points`,
                 data: cumSum(homePoints),
                 backgroundColor: getTeamColorById(homeId),
                 borderColor: getTeamColorById(homeId),
                 pointBackgroundColor: getTeamColorById(homeId),
                 pointBorderColor: getTeamColorById(homeId),
-                borderWidth: 4,
-            }],
+                borderWidth: 3,
+            },
+            {
+                label: `${homeName} Daily Points`,
+                data: homePoints,
+                backgroundColor: getTeamColorById(homeId),
+                borderColor: getTeamColorById(homeId),
+                pointBackgroundColor: getTeamColorById(homeId),
+                pointBorderColor: getTeamColorById(homeId),
+                borderWidth: 3,
+                borderDash: [5, 5],
+            },
+        ],
         },
         options: {
             responsive: true,
+            // Set plot to a square canvas:
+            aspectRatio: 1,
             plugins: {
                 title: {
                     display: true,
-                    text: "Cumulative Points",
+                    text: `${awayName} At ${homeName} Results`,
                 }
             }
         },
     });
-}
-
-function clearData()
-{
-    result.innerHTML = "";
 }
 
 function determineMatchupBadge(awayPoints, homePoints)
