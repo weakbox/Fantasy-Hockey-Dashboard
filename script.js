@@ -2,21 +2,42 @@
 // Code written and maintained by Connor McLeod
 
 const result = document.getElementById("result");
-const select2024Button = document.getElementById("select-2024-button");
 
 const scheduleCache = {};
+const year = 2024;
 
-// Onclick declarations (can be function-atized):
+setupYearSelectButton("year-select-2024", 2024);
+setupYearSelectButton("year-select-2025", 2025);
 
-select2024Button.year = 2024;
-select2024Button.addEventListener("click", (event) =>
+fetchScheduleData(year);
+
+/* FUNCTION DECLARATIONS BELOW: */
+
+function setupYearSelectButton(id, year)
 {
-    const year = event.target.year;
-    fetchScheduleData(year);
-});
+    button = document.getElementById(id);
 
-const defaultYear = 2024;
-fetchScheduleData(defaultYear);
+    if (!button)
+    {
+        console.error(`Could not find button with id "${id}".`);
+        return;
+    }
+
+    button.year = year;
+
+    button.addEventListener("click", (event) =>
+    {
+        clearMatchups();
+
+        year = event.target.year;
+        fetchScheduleData(year);
+    });
+}
+
+function clearMatchups()
+{
+    result.innerHTML = "";
+}
 
 async function fetchScheduleData(year)
 {
@@ -29,15 +50,15 @@ async function fetchScheduleData(year)
         return;
     }
 
-    // Fetch if data was not present in the cache:
     try 
     {
         const result = await fetch(url);
         const data = await result.json();
+
         scheduleCache[year] = data;
+        
         getMatchupPeriodLengths(data, year);
         displayScheduleData(data);
-        console.log(scheduleCache);
     } 
     catch (error) 
     {
@@ -143,8 +164,8 @@ function extractMatchupData(matchup, teams)
     let { pointsByScoringPeriod: awayPointsByScoringPeriod } = awayStats;
     let { pointsByScoringPeriod: homePointsByScoringPeriod } = homeStats;
 
-    awayPointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(awayPointsByScoringPeriod, matchupPeriodId, 2024));
-    homePointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(homePointsByScoringPeriod, matchupPeriodId, 2024));
+    awayPointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(awayPointsByScoringPeriod, matchupPeriodId, year));
+    homePointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(homePointsByScoringPeriod, matchupPeriodId, year));
 
     const awayTeam = teams.find((team) => team['id'] === awayTeamId);
     const homeTeam = teams.find((team) => team['id'] === homeTeamId);
