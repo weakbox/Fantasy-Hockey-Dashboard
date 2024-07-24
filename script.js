@@ -4,16 +4,20 @@
 const result = document.getElementById("result");
 
 const scheduleCache = {};
-const year = 2024;
+const stickAndPuckLeagueId = "869377698";
 
-setupYearSelectButton("year-select-2024", 2024);
-setupYearSelectButton("year-select-2025", 2025);
+setupYearSelectButton("year-select-2024", 2024, stickAndPuckLeagueId);
+setupYearSelectButton("doaktown-year-select-2024", 2024, 0);
+setupYearSelectButton("year-select-2025", 2025, stickAndPuckLeagueId);
 
-fetchScheduleData(year);
+let globalYear = 2025;
+let leagueId = stickAndPuckLeagueId;
+
+fetchScheduleData(globalYear, leagueId);
 
 /* FUNCTION DECLARATIONS BELOW: */
 
-function setupYearSelectButton(id, year)
+function setupYearSelectButton(id, year, leagueId)
 {
     button = document.getElementById(id);
 
@@ -24,13 +28,16 @@ function setupYearSelectButton(id, year)
     }
 
     button.year = year;
+    button.leagueId = leagueId;
 
     button.addEventListener("click", (event) =>
     {
         clearMatchups();
 
-        year = event.target.year;
-        fetchScheduleData(year);
+        globalYear = event.target.year;
+        leagueId = event.target.leagueId;
+
+        fetchScheduleData(globalYear, leagueId);
     });
 }
 
@@ -39,31 +46,38 @@ function clearMatchups()
     result.innerHTML = "";
 }
 
-async function fetchScheduleData(year)
+async function fetchScheduleData(year, leagueId)
 {
-    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/869377698?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
+    const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/${leagueId}?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
 
     // Use cache if data has already been fetched:
-    if (scheduleCache[year])
+    if (scheduleCache[`${leagueId}-${year}`])
     {
-        displayScheduleData(scheduleCache[year]);
+        displayScheduleData(scheduleCache[`${leagueId}-${year}`]);
         return;
     }
 
     try 
     {
+        console.log(`Fetching from "${url}"`);
+
         const result = await fetch(url);
         const data = await result.json();
 
-        scheduleCache[year] = data;
+        scheduleCache[`${leagueId}-${year}`] = data;
+
+        console.log("Current cache:", scheduleCache);
 
         getMatchupPeriodLengths(data, year);
         displayScheduleData(data);
     } 
     catch (error) 
     {
-        alert(`Something went wrong when trying to fetch the data for year "${year}".`);
         console.log(error);
+        alert(`Something went wrong when trying to fetch the data.`);
+
+        // Reload the page to reset from errors:
+        location.reload();
     }
 }
 
@@ -164,8 +178,8 @@ function extractMatchupData(matchup, teams)
     let { pointsByScoringPeriod: awayPointsByScoringPeriod } = awayStats;
     let { pointsByScoringPeriod: homePointsByScoringPeriod } = homeStats;
 
-    awayPointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(awayPointsByScoringPeriod, matchupPeriodId, year));
-    homePointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(homePointsByScoringPeriod, matchupPeriodId, year));
+    awayPointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(awayPointsByScoringPeriod, matchupPeriodId, globalYear));
+    homePointsByScoringPeriod = pointsObjectToArray(populateMissingKeysInMatchupObject(homePointsByScoringPeriod, matchupPeriodId, globalYear));
 
     const awayTeam = teams.find((team) => team['id'] === awayTeamId);
     const homeTeam = teams.find((team) => team['id'] === homeTeamId);
@@ -456,7 +470,7 @@ function getMatchupPeriodLengths(data, year)
         matchupPeriodInfo.push(info);
     }
     
-    scheduleCache[year]['matchupPeriodInfo'] = matchupPeriodInfo;
+    scheduleCache[`${leagueId}-${year}`]['matchupPeriodInfo'] = matchupPeriodInfo;
 }
 
 function getMinKey(keyArray)
@@ -473,7 +487,7 @@ function getMaxKey(keyArray)
 
 function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchupPeriodId, year)
 {
-    const { start, end } = scheduleCache[year].matchupPeriodInfo[matchupPeriodId];
+    const { start, end } = scheduleCache[`${leagueId}-${year}`].matchupPeriodInfo[matchupPeriodId];
 
     for (let i = start; i <= end; i++)
     {

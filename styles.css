@@ -55,7 +55,7 @@ canvas {
   display: inline;
   width: 30px;
   vertical-align: middle;
-  background-color: var(--text-color);
+  /* background-color: var(--text-color); */
   border-radius: 50%;
 }
 
@@ -78,7 +78,7 @@ canvas {
 
 .result-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
 }
 
 .matchup-period-container {
@@ -123,8 +123,14 @@ footer a {
 }
 
 /* Media queries need to be below CSS declarations! */
-@media only screen and (max-width: 600px) {
+@media only screen and (min-width: 700px) {
   .result-container {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (min-width: 1800px) {
+  .result-container {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
