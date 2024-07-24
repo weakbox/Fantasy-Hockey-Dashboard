@@ -62,6 +62,7 @@ function displayScheduleData(data)
         const periodContainer = document.createElement('div');
         periodContainer.id = `matchup-period-container-${i}`;
         periodContainer.classList.add('matchup-period-container');
+        addShowAdvancedStatsClickEvent(periodContainer);
 
         const periodTitle = document.createElement('p');
         periodTitle.classList.add('bubble');
@@ -72,6 +73,58 @@ function displayScheduleData(data)
 
         matchupPeriodScheduleArr.forEach((matchup) => extractMatchupData(matchup, teamsArr));
     }
+}
+
+function addShowAdvancedStatsClickEvent(element)
+{
+    // Add click functionality using event delegation:
+    element.addEventListener("click", (event) =>
+    {
+        if (event.target.classList.contains("matchup-container"))
+        {
+            toggleAdvancedStats(event.target);
+        }
+    });
+}
+
+function toggleAdvancedStats(element)
+{
+    const 
+    {
+        matchupPeriod,
+        awayAbbrev,
+        awayName, 
+        awayId,
+        awayTotalPoints,
+        awayPointsByScoringPeriod,
+        homeAbbrev,
+        homeName,
+        homeId,
+        homeTotalPoints,
+        homePointsByScoringPeriod,
+    } = JSON.parse(element.dataset.matchup);
+    
+    const canvasId = `chart-${awayAbbrev.toLowerCase()}-${homeAbbrev.toLowerCase()}-${matchupPeriod}`;
+
+    const existingCanvas = document.getElementById(canvasId);
+
+    // Check if canvas already exists:
+    if (existingCanvas)
+    {
+        existingCanvas.remove();
+        return;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.id = canvasId;
+
+    // Chart creation has to be deffered to ensure DOM is updated:
+    setTimeout(() => 
+    {
+        plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, awayPointsByScoringPeriod, homePointsByScoringPeriod);
+    }, 0);
+
+    element.appendChild(canvas);
 }
 
 function extractMatchupData(matchup, teams)
@@ -99,9 +152,26 @@ function extractMatchupData(matchup, teams)
     const { abbrev: awayAbbrev, logo: awayLogo, name: awayName,  } = awayTeam;
     const { abbrev: homeAbbrev, logo: homeLogo, name: homeName,  } = homeTeam;
 
-    // console.log("Debug:", awayName, awayPointsByScoringPeriod, winner, matchupPeriodId);
+    const matchupData = 
+    {
+        matchupPeriod: matchupPeriodId,
+
+        awayAbbrev: awayAbbrev,
+        awayName: awayName,
+        awayId: awayTeamId,
+        awayTotalPoints: awayTotalPoints,
+        awayPointsByScoringPeriod: awayPointsByScoringPeriod,
+
+        homeAbbrev: homeAbbrev,
+        homeName: homeName,
+        homeId: homeTeamId,
+        homeTotalPoints: homeTotalPoints,
+        homePointsByScoringPeriod: homePointsByScoringPeriod,
+    };
 
     // Data extraction complete:
+
+    // THIS COULD MOST LIKELY BE MOVED TO A FUNCTION!!!
 
     const matchupBadge = determineMatchupBadge(awayTotalPoints, homeTotalPoints);
     const matchupPrefix = determineMatchupPrefix(playoffTierType);
@@ -165,31 +235,20 @@ function extractMatchupData(matchup, teams)
             console.log("Something went wrong in the switch statement...");
     }
 
+    // Append new div to the container:
     div = document.getElementById(`matchup-period-container-${matchupPeriodId}`);
-    
-    if (isChampionshipMatch(playoffTierType))
-    {
-        div.innerHTML += `<div class="matchup-container championship-match">${string}</div>`;
-    }
-    else
-    {
-        div.innerHTML += `<div class="matchup-container">${string}</div>`;
-    }
 
-    // Plot chart:
-    const canvasID = `chart-${matchupPeriodId}-${awayName}-${homeName}`;
+    const matchupContainerId = `matchup-${awayAbbrev.toLowerCase()}-${homeAbbrev.toLowerCase()}-${matchupPeriodId}`;
 
-    div.innerHTML += `
-        <div>
-            <canvas id="${canvasID}" width="200" height="200"></canvas>
-        </div>
-    `;
+    const matchupContainer = document.createElement("div");
+    matchupContainer.id = matchupContainerId;
+    matchupContainer.classList.add("matchup-container");
+    matchupContainer.innerHTML = string;
 
-    // Chart has to be deffered to allow the DOM to update:
-    setTimeout(() => 
-    {
-        plotCumulativeLineChart(canvasID, awayName, homeName, awayTeamId, homeTeamId, awayPointsByScoringPeriod, homePointsByScoringPeriod);
-    }, 0);
+    // Add matchup data as a data attribute:
+    matchupContainer.dataset.matchup = JSON.stringify(matchupData);
+
+    div.append(matchupContainer);
 }
 
 function plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, awayPoints, homePoints)
