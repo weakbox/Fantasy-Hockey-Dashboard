@@ -56,7 +56,7 @@ async function fetchScheduleData(year)
         const data = await result.json();
 
         scheduleCache[year] = data;
-        
+
         getMatchupPeriodLengths(data, year);
         displayScheduleData(data);
     } 
@@ -347,17 +347,17 @@ function determineMatchupBadge(awayPoints, homePoints)
     if (awayPoints === homePoints)
     {
         badge = "⁉️";
-        badgeText = "Matchup ended in a tie! What are the odds!";
+        badgeText = "Tied";
     }
     else if (awayPoints - homePoints > 50 || homePoints - awayPoints > 50)
     {
         badge = "💪🏼";
-        badgeText = "Dominated! Match was decided by over 50 points!";
+        badgeText = "Dominated";
     }
     else if (Math.abs(awayPoints - homePoints) <= 3)
     {
         badge = "💦";
-        badgeText = "Close call! Match was decided by less than 3 points!";
+        badgeText = "Close call";
     }
 
     if (badge)
@@ -377,7 +377,7 @@ function determineMatchupPrefix(type)
     {
         case ("WINNERS_BRACKET"):
             prefix = "🏆";
-            prefixText = "Championship Match";
+            prefixText = "Playoff Match";
             break;
 
         default:
