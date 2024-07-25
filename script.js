@@ -4,15 +4,16 @@
 const result = document.getElementById("result");
 
 const stickAndPuckLeagueId = "869377698";
-const doaktownLeagueId = "1017266493";
+const umhlLeagueId = "1017266493";
 
+setupYearSelectButton("umhl-year-select-2023", 2023, umhlLeagueId);
+setupYearSelectButton("umhl-year-select-2025", 2025, umhlLeagueId);
 setupYearSelectButton("year-select-2024", 2024, stickAndPuckLeagueId);
-setupYearSelectButton("doaktown-year-select-2024", 2025, doaktownLeagueId);
 setupYearSelectButton("year-select-2025", 2025, stickAndPuckLeagueId);
 
 let scheduleCache = {};
 let leagueId = stickAndPuckLeagueId;
-let globalYear = 2024;
+let globalYear = 2025;
 
 fetchScheduleData(globalYear, leagueId);
 
@@ -90,7 +91,6 @@ async function fetchScheduleData(year, leagueId)
 function updateCache(leagueId, year, data)
 {
     scheduleCache[`${leagueId}-${year}`] = data;
-    console.log(`${leagueId}-${year}`);
     console.log("Cache updated:", scheduleCache);
 }
 
@@ -102,7 +102,6 @@ function fetchFromCache(leagueId, year)
     {
         console.log(`Data was found in cache.`);
     }
-    console.log(leagueId, year);
     return result;
 }
 
@@ -494,8 +493,7 @@ function getMatchupPeriodLengths(data, year)
 
         matchupPeriodInfo.push(info);
     }
-
-    console.log("For Debug:", scheduleCache);
+    
     fetchFromCache(leagueId, year)['matchupPeriodInfo'] = matchupPeriodInfo;
 }
 
