@@ -3,15 +3,16 @@
 
 const result = document.getElementById("result");
 
-const scheduleCache = {};
 const stickAndPuckLeagueId = "869377698";
+const doaktownLeagueId = "1017266493";
 
 setupYearSelectButton("year-select-2024", 2024, stickAndPuckLeagueId);
-setupYearSelectButton("doaktown-year-select-2024", 2024, 0);
+setupYearSelectButton("doaktown-year-select-2024", 2025, doaktownLeagueId);
 setupYearSelectButton("year-select-2025", 2025, stickAndPuckLeagueId);
 
-let globalYear = 2025;
+let scheduleCache = {};
 let leagueId = stickAndPuckLeagueId;
+let globalYear = 2024;
 
 fetchScheduleData(globalYear, leagueId);
 
@@ -27,23 +28,33 @@ function setupYearSelectButton(id, year, leagueId)
         return;
     }
 
-    button.year = year;
     button.leagueId = leagueId;
+    button.year = year;
 
     button.addEventListener("click", (event) =>
     {
         clearMatchups();
 
-        globalYear = event.target.year;
-        leagueId = event.target.leagueId;
+        changeGlobalLeagueId(event.target.leagueId);
+        changeGlobalYear(event.target.year);
 
         fetchScheduleData(globalYear, leagueId);
     });
 }
 
+function changeGlobalYear(newYear)
+{
+    globalYear = newYear;
+}
+
+function changeGlobalLeagueId(newLeagueId)
+{
+    leagueId = newLeagueId;
+}
+
 function clearMatchups()
 {
-    result.innerHTML = "";
+    document.getElementById("result").innerHTML = "";
 }
 
 async function fetchScheduleData(year, leagueId)
@@ -51,22 +62,20 @@ async function fetchScheduleData(year, leagueId)
     const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/${leagueId}?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
 
     // Use cache if data has already been fetched:
-    if (scheduleCache[`${leagueId}-${year}`])
+    if (fetchFromCache(leagueId, year))
     {
-        displayScheduleData(scheduleCache[`${leagueId}-${year}`]);
+        displayScheduleData(fetchFromCache(leagueId, year));
         return;
     }
 
     try 
     {
-        console.log(`Fetching from "${url}"`);
+        console.log(`Attempting fetch from: ${url}`);
 
         const result = await fetch(url);
         const data = await result.json();
 
-        scheduleCache[`${leagueId}-${year}`] = data;
-
-        console.log("Current cache:", scheduleCache);
+        updateCache(leagueId, year, data);
 
         getMatchupPeriodLengths(data, year);
         displayScheduleData(data);
@@ -74,11 +83,27 @@ async function fetchScheduleData(year, leagueId)
     catch (error) 
     {
         console.log(error);
-        alert(`Something went wrong when trying to fetch the data.`);
-
-        // Reload the page to reset from errors:
-        location.reload();
+        alert(`Something went wrong when trying to fetch the data for ${leagueId} ${globalYear}.`);
     }
+}
+
+function updateCache(leagueId, year, data)
+{
+    scheduleCache[`${leagueId}-${year}`] = data;
+    console.log(`${leagueId}-${year}`);
+    console.log("Cache updated:", scheduleCache);
+}
+
+function fetchFromCache(leagueId, year)
+{
+    const result = scheduleCache[`${leagueId}-${year}`];
+
+    if (result)
+    {
+        console.log(`Data was found in cache.`);
+    }
+    console.log(leagueId, year);
+    return result;
 }
 
 function displayScheduleData(data) 
@@ -469,8 +494,9 @@ function getMatchupPeriodLengths(data, year)
 
         matchupPeriodInfo.push(info);
     }
-    
-    scheduleCache[`${leagueId}-${year}`]['matchupPeriodInfo'] = matchupPeriodInfo;
+
+    console.log("For Debug:", scheduleCache);
+    fetchFromCache(leagueId, year)['matchupPeriodInfo'] = matchupPeriodInfo;
 }
 
 function getMinKey(keyArray)
@@ -487,7 +513,7 @@ function getMaxKey(keyArray)
 
 function populateMissingKeysInMatchupObject(pointsByScoringPeriodObject, matchupPeriodId, year)
 {
-    const { start, end } = scheduleCache[`${leagueId}-${year}`].matchupPeriodInfo[matchupPeriodId];
+    const { start, end } = fetchFromCache(leagueId, year).matchupPeriodInfo[matchupPeriodId];
 
     for (let i = start; i <= end; i++)
     {
