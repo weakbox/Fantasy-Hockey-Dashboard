@@ -6,7 +6,6 @@ const result = document.getElementById("result");
 const stickAndPuckLeagueId = "869377698";
 const umhlLeagueId = "1017266493";
 
-setupYearSelectButton("umhl-year-select-2023", 2023, umhlLeagueId);
 setupYearSelectButton("umhl-year-select-2025", 2025, umhlLeagueId);
 setupYearSelectButton("year-select-2024", 2024, stickAndPuckLeagueId);
 setupYearSelectButton("year-select-2025", 2025, stickAndPuckLeagueId);
@@ -529,17 +528,17 @@ function getTeamColorById(teamId)
 {
     const colors = 
     [
-        { primary: "#000000", secondary: "#000000" },   /* Default case: */
-        { primary: "#ff7b00", secondary: "#ffbc7d" },
-        { primary: "#27b500", secondary: "#82d96a" },
-        { primary: "#c4aa00", secondary: "#ebda6e" },
-        { primary: "#748d99", secondary: "#bce5f7" },
-        { primary: "#0040ff", secondary: "#6b90ff" },
-        { primary: "#ffdd00", secondary: "#fff08f" },
-        { primary: "#ff0000", secondary: "#ff8080" },
-        { primary: "#8e47ff", secondary: "#c29cff" },
-        { primary: "#00eaf2", secondary: "#99fcff" },
-        { primary: "#5c3900", secondary: "#856c45" },
+        { team: "NULL", primary: "#000000", secondary: "#000000" },   /* Default case: */
+        { team: "Lance", primary: "#ff7b00", secondary: "#ffbc7d" },
+        { team: "Connor", primary: "#27b500", secondary: "#82d96a" },
+        { team: "Stephen", primary: "#c4aa00", secondary: "#ebda6e" },
+        { team: "Gillian", primary: "#748d99", secondary: "#bce5f7" },
+        { team: "Jacob", primary: "#0040ff", secondary: "#6b90ff" },
+        { team: "Daniel", primary: "#ffdd00", secondary: "#fff08f" },
+        { team: "Patrick", primary: "#ff0000", secondary: "#ff8080" },
+        { team: "Zander", primary: "#8e47ff", secondary: "#c29cff" },
+        { team: "John", primary: "#00eaf2", secondary: "#99fcff" },
+        { team: "Jonathan", primary: "#5c3900", secondary: "#856c45" },
     ];
 
     // Handle case where a team has not been provided a color:

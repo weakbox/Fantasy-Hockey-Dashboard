@@ -5,21 +5,32 @@
 }
 
 :root {
-  --main-bg-color: rgb(54,57,62);
-  --secondary-bg-color: rgb(44, 46, 48);
-  --card-color: rgb(66,69,73); 
-  --card-hover-color: rgb(101, 105, 110);
-  --text-color: white;
+  color-scheme: light dark;
+
+  --main-bg-color: rgb(220, 232, 255);
+  --main-bg-color-dark: rgb(54,57,62);
+
+  --secondary-bg-color: rgb(160, 193, 235);
+  --secondary-bg-color-dark: rgb(44, 46, 48);
+
+  --card-color: rgb(255, 255, 255);
+  --card-color-dark: rgb(66,69,73);
+  
+  --card-hover-color: rgb(236, 240, 243);
+  --card-hover-color-dark: rgb(101, 105, 110);
+
+  --text-color: rgb(0, 0, 0);
+  --text-color-dark: white;
 }
 
 header {
   margin: 8px;
   padding: 8px;
   text-align: center;
-  background-color: var(--secondary-bg-color);
+  background-color: light-dark(var(--card-color), var(--secondary-bg-color-dark));
   border: 1px solid black;
   border-radius: 4px;
-  color: var(--text-color);
+  color: light-dark(var(--text-color), var(--text-color-dark));
 }
 
 .year-button {
@@ -27,12 +38,12 @@ header {
   padding: 8px;
   border: 1px solid black;
   border-radius: 4px;
-  background-color: var(--card-color);
-  color: var(--text-color);
+  background-color: light-dark(var(--card-color), var(--card-color-dark));
+  color: light-dark(var(--text-color), var(--text-color-dark));
 }
 
 .year-button:hover {
-  background-color: var(--card-hover-color);
+  background-color: light-dark(var(--card-hover-color), var(--card-hover-color-dark));
 }
 
 body {
@@ -42,7 +53,7 @@ body {
   font-style: normal;
 
   text-align: center;
-  background-color: var(--main-bg-color);
+  background-color: light-dark(var(--main-bg-color), var(--main-bg-color-dark));
 }
 
 canvas {
@@ -50,7 +61,7 @@ canvas {
   max-height: 512px;
   margin-top: 8px;
   padding: 0px;
-  background-color: var(--text-color);
+  background-color: white;
   border: 1px solid black;
   border-radius: 4px;
 }
@@ -70,14 +81,14 @@ canvas {
   justify-content: center;
   margin: 8px;
   padding: 12px;
-  background-color: var(--card-color);
-  color: var(--text-color);
+  background-color: light-dark(var(--card-color), var(--card-color-dark));
+  color: light-dark(var(--text-color), var(--text-color-dark));
   border: 1px solid black;
   border-radius: 5px;
 }
 
 .matchup-container:hover {
-  background-color: var(--card-hover-color);
+  background-color: light-dark(var(--card-hover-color), var(--card-hover-color-dark));
 }
 
 .result-container {
@@ -90,7 +101,7 @@ canvas {
   grid-template-columns: 1fr;
   margin: 8px;
   padding: 8px;
-  background-color: var(--secondary-bg-color);
+  background-color: light-dark(var(--secondary-bg-color), var(--secondary-bg-color-dark));
   border: 1px solid black;
   border-radius: 5px;
 }
@@ -104,8 +115,8 @@ canvas {
   margin: 8px;
   padding: 8px;
   width: fit-content;
-  background-color: var(--card-color);
-  color: var(--text-color);
+  background-color: light-dark(var(--card-color), var(--card-color-dark));
+  color: light-dark(var(--text-color), var(--text-color-dark));
   border: 1px solid black;
   border-radius: 4px;
 }
@@ -119,11 +130,11 @@ footer {
   font-size: x-small;
   margin: 8px;
   padding-bottom: 8px;
-  color: var(--text-color);
+  color: light-dark(var(--text-color), var(--text-color-dark));
 }
 
 footer a {
-  color: var(--text-color);
+  color: light-dark(var(--text-color), var(--text-color-dark));
 }
 
 /* Media queries need to be below CSS declarations! */
