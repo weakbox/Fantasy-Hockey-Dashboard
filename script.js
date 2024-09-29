@@ -529,16 +529,18 @@ function getTeamColorById(teamId)
     const colors = 
     [
         { team: "NULL", primary: "#000000", secondary: "#000000" },   /* Default case: */
-        { team: "Lance", primary: "#ff7b00", secondary: "#ffbc7d" },
-        { team: "Connor", primary: "#27b500", secondary: "#82d96a" },
-        { team: "Stephen", primary: "#c4aa00", secondary: "#ebda6e" },
-        { team: "Gillian", primary: "#748d99", secondary: "#bce5f7" },
-        { team: "Jacob", primary: "#0040ff", secondary: "#6b90ff" },
-        { team: "Daniel", primary: "#ffdd00", secondary: "#fff08f" },
-        { team: "Patrick", primary: "#ff0000", secondary: "#ff8080" },
-        { team: "Zander", primary: "#8e47ff", secondary: "#c29cff" },
-        { team: "John", primary: "#00eaf2", secondary: "#99fcff" },
-        { team: "Jonathan", primary: "#5c3900", secondary: "#856c45" },
+        { team: "Lance", primary: "rgb(206, 161, 16)", secondary: "rgb(161, 127, 14)" },
+        { team: "Connor", primary: "rgb(15, 155, 85)", secondary: "rgb(13, 122, 68)" },
+        { team: "Stephen", primary: "rgb(116, 236, 80)", secondary: "rgb(105, 199, 77)" },
+        { team: "Gillian", primary: "rgb(174, 85, 226)", secondary: "rgb(139, 69, 180)" },
+        { team: "Jacob", primary: "rgb(0, 64, 255)", secondary: "rgb(107, 144, 255)" },
+        { team: "Daniel", primary: "rgb(92, 92, 92)", secondary: "rgb(61, 61, 61)" },
+        { team: "Patrick", primary: "rgb(255, 208, 0)", secondary: "rgb(253, 224, 92)" },
+        { team: "Zander", primary: "rgb(255, 71, 194)", secondary: "rgb(197, 56, 150)" },
+        { team: "John", primary: "rgb(0, 186, 242)", secondary: "rgb(3, 152, 197)" },
+        { team: "Jonathan", primary: "rgb(255, 94, 0)", secondary: "rgb(209, 77, 0)" },
+        { team: "NULL", primary: "#000000", secondary: "#000000" },
+        { team: "Evan", primary: "rgb(224, 13, 13)", secondary: "#b10101" },
     ];
 
     // Handle case where a team has not been provided a color:
