@@ -23,6 +23,7 @@ Earlier in the year, I created a matchup plot generator in Python for our fantas
 
 ## What's Next?
 
+* Migrate to React.
 * Additional stat calculations.
 * Ability to add additional leagues through user input.
 
