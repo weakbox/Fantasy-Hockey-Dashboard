@@ -1,6 +1,8 @@
 // For use within the Stick & Puck Fantasy Hockey League
 // Code written and maintained by Connor McLeod
 
+/* -------------------- MAIN CODE -------------------- */
+
 const result = document.getElementById("result");
 
 const stickAndPuckLeagueId = "869377698";
@@ -16,14 +18,13 @@ let globalYear = 2025;
 
 fetchScheduleData(globalYear, leagueId);
 
-/* FUNCTION DECLARATIONS BELOW: */
+/* -------------------- FUNCTIONS -------------------- */
 
-function setupYearSelectButton(id, year, leagueId)
-{
+// Initializes a button with the functionality required to update the results container.
+function setupYearSelectButton(id, year, leagueId) {
     button = document.getElementById(id);
 
-    if (!button)
-    {
+    if (!button) {
         console.error(`Could not find button with id "${id}".`);
         return;
     }
@@ -31,29 +32,26 @@ function setupYearSelectButton(id, year, leagueId)
     button.leagueId = leagueId;
     button.year = year;
 
-    button.addEventListener("click", (event) =>
-    {
+    button.addEventListener("click", (event) => {
         clearMatchups();
-
         changeGlobalLeagueId(event.target.leagueId);
         changeGlobalYear(event.target.year);
-
         fetchScheduleData(globalYear, leagueId);
     });
 }
 
-function changeGlobalYear(newYear)
-{
+// Sets the global year used to fetch data.
+function changeGlobalYear(newYear) {
     globalYear = newYear;
 }
 
-function changeGlobalLeagueId(newLeagueId)
-{
+// Sets the global league ID used to fetch data.
+function changeGlobalLeagueId(newLeagueId) {
     leagueId = newLeagueId;
 }
 
-function clearMatchups()
-{
+// Clears the content of the results container.
+function clearMatchups() {
     document.getElementById("result").innerHTML = "";
 }
 
