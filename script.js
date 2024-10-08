@@ -34,72 +34,56 @@ function setupYearSelectButton(id, year, leagueId) {
 
     button.addEventListener("click", (event) => {
         clearMatchups();
-        changeGlobalLeagueId(event.target.leagueId);
-        changeGlobalYear(event.target.year);
+        setGlobalLeagueId(event.target.leagueId);
+        setGlobalYear(event.target.year);
         fetchScheduleData(globalYear, leagueId);
     });
 }
 
 // Sets the global year used to fetch data.
-function changeGlobalYear(newYear) {
+function setGlobalYear(newYear) {
     globalYear = newYear;
 }
 
 // Sets the global league ID used to fetch data.
-function changeGlobalLeagueId(newLeagueId) {
+function setGlobalLeagueId(newLeagueId) {
     leagueId = newLeagueId;
 }
 
 // Clears the content of the results container.
 function clearMatchups() {
-    document.getElementById("result").innerHTML = "";
+    result.innerHTML = "";
 }
 
-async function fetchScheduleData(year, leagueId)
-{
+// Fetches data from ESPN API for the chosen year and league, then displays this data.
+async function fetchScheduleData(year, leagueId) {
     const url = `https://lm-api-reads.fantasy.espn.com/apis/v3/games/fhl/seasons/${year}/segments/0/leagues/${leagueId}?view=modular&view=mNav&view=mMatchupScore&view=mScoreboard&view=mSettings&view=mTopPerformers&view=mTeam`;
 
-    // Use cache if data has already been fetched:
-    if (fetchFromCache(leagueId, year))
-    {
+    // Use cached data if fetch has already occurred:
+    if (fetchFromCache(leagueId, year)) {
         displayScheduleData(fetchFromCache(leagueId, year));
         return;
     }
 
-    try 
-    {
-        console.log(`Attempting fetch from: ${url}`);
-
+    try {
         const result = await fetch(url);
         const data = await result.json();
-
         updateCache(leagueId, year, data);
-
         getMatchupPeriodLengths(data, year);
         displayScheduleData(data);
-    } 
-    catch (error) 
-    {
-        console.log(error);
-        alert(`Something went wrong when trying to fetch the data for ${leagueId} ${globalYear}.`);
+    } catch (error) {
+        console.error(error);
     }
 }
 
-function updateCache(leagueId, year, data)
-{
+// Updates the cache (can this be done more elegantly using the browser cache?).
+function updateCache(leagueId, year, data) {
     scheduleCache[`${leagueId}-${year}`] = data;
-    console.log("Cache updated:", scheduleCache);
 }
 
-function fetchFromCache(leagueId, year)
-{
-    const result = scheduleCache[`${leagueId}-${year}`];
-
-    if (result)
-    {
-        console.log(`Data was found in cache.`);
-    }
-    return result;
+// Fetches data for a specified league and year from the cache.
+function fetchFromCache(leagueId, year) {
+    return scheduleCache[`${leagueId}-${year}`];
 }
 
 function displayScheduleData(data) 
@@ -183,18 +167,22 @@ function toggleAdvancedStats(element)
     element.appendChild(canvas);
 }
 
+// Extracts matchup data from index in schedule array. Appends the data inside of the results div.
 function extractMatchupData(matchup, teams)
 {   
     const { away: awayStats = null, home: homeStats, matchupPeriodId, playoffTierType, winner } = matchup;
 
-    // Return if matchup was a bye-week:
-    if (!awayStats)
-    {
+    // Bye weeks don't have an away team:
+    if (awayStats === null) {
         return;
     }
 
-    const { teamId: awayTeamId, totalPoints: awayTotalPoints } = awayStats;
-    const { teamId: homeTeamId, totalPoints: homeTotalPoints } = homeStats;
+    const { teamId: awayTeamId } = awayStats;
+    const { teamId: homeTeamId } = homeStats;
+
+    // During game days, live points for that day are kept in a new property called totalPointsLive.
+    const awayTotalPoints = awayStats.totalPointsLive ? awayStats.totalPointsLive : awayStats.totalPoints;
+    const homeTotalPoints = homeStats.totalPointsLive ? homeStats.totalPointsLive : homeStats.totalPoints;
 
     let { pointsByScoringPeriod: awayPointsByScoringPeriod } = awayStats;
     let { pointsByScoringPeriod: homePointsByScoringPeriod } = homeStats;
