@@ -7,10 +7,10 @@
 :root {
   color-scheme: light dark;
 
-  --main-bg-color: rgb(220, 232, 255);
+  --main-bg-color: rgb(204, 221, 252);
   --main-bg-color-dark: rgb(54,57,62);
 
-  --secondary-bg-color: rgb(160, 193, 235);
+  --secondary-bg-color: rgb(124, 173, 238);
   --secondary-bg-color-dark: rgb(44, 46, 48);
 
   --card-color: rgb(255, 255, 255);
@@ -28,15 +28,15 @@ header {
   padding: 8px;
   text-align: center;
   background-color: light-dark(var(--card-color), var(--secondary-bg-color-dark));
-  border: 1px solid black;
   border-radius: 4px;
   color: light-dark(var(--text-color), var(--text-color-dark));
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .year-button {
   width: auto;
   padding: 8px;
-  border: 1px solid black;
+  border: 1px solid rgb(255, 255, 255);
   border-radius: 4px;
   background-color: light-dark(var(--card-color), var(--card-color-dark));
   color: light-dark(var(--text-color), var(--text-color-dark));
@@ -62,7 +62,6 @@ canvas {
   margin-top: 8px;
   padding: 0px;
   background-color: white;
-  border: 1px solid black;
   border-radius: 4px;
 }
 
@@ -83,8 +82,8 @@ canvas {
   padding: 12px;
   background-color: light-dark(var(--card-color), var(--card-color-dark));
   color: light-dark(var(--text-color), var(--text-color-dark));
-  border: 1px solid black;
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .matchup-container:hover {
@@ -102,8 +101,8 @@ canvas {
   margin: 8px;
   padding: 8px;
   background-color: light-dark(var(--secondary-bg-color), var(--secondary-bg-color-dark));
-  border: 1px solid black;
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .prevent-highlight-cursor:hover {
@@ -117,8 +116,8 @@ canvas {
   width: fit-content;
   background-color: light-dark(var(--card-color), var(--card-color-dark));
   color: light-dark(var(--text-color), var(--text-color-dark));
-  border: 1px solid black;
   border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .badge {

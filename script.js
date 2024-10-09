@@ -86,16 +86,17 @@ function fetchFromCache(leagueId, year) {
     return scheduleCache[`${leagueId}-${year}`];
 }
 
-function displayScheduleData(data) 
-{
+// Creates the containers for each week and inserts the associated matches.
+// This function is basically responsible for all of the dynamic page content.
+function displayScheduleData(data) {
     const scheduleArr = data['schedule'];
     const teamsArr = data['teams'];
     const activeMatchupPeriods = data['status']['currentMatchupPeriod'];
 
-    for (let i = 1; i <= activeMatchupPeriods; i++)
-    {
+    for (let i = 1; i <= activeMatchupPeriods; i++) {   // Matchup periods start at 1.
         matchupPeriodScheduleArr = scheduleArr.filter((matchup) => matchup['matchupPeriodId'] === i);
 
+        // Set up container that will hold all the matches in the week:
         const periodContainer = document.createElement('div');
         periodContainer.id = `matchup-period-container-${i}`;
         periodContainer.classList.add('matchup-period-container');
@@ -103,44 +104,36 @@ function displayScheduleData(data)
 
         const periodTitle = document.createElement('p');
         periodTitle.classList.add('bubble');
-        periodTitle.innerHTML = `<strong>Matchup ${i}</strong>`;
+        periodTitle.innerHTML = `<strong>Week ${i}</strong>`;
 
         periodContainer.appendChild(periodTitle);
         result.appendChild(periodContainer);
 
+        // Get results to append to the new container:
         matchupPeriodScheduleArr.forEach((matchup) => extractMatchupData(matchup, teamsArr));
     }
 }
 
-function addShowAdvancedStatsClickEvent(element)
-{
-    // Example of event delegation:
-    element.addEventListener("click", (event) =>
-    {
+// Adds the advanced stats click event to the week container. Uses event delegation to reduce the number of click events.
+function addShowAdvancedStatsClickEvent(element) {
+    element.addEventListener("click", (event) => {
         // Traverse up the element until the associated matchup container is found:
         const targetElement = event.target.closest(".matchup-container");
-
-        if (targetElement)
-        {
-            toggleAdvancedStats(targetElement);
-        }
+        if (targetElement) toggleAdvancedStats(targetElement);
     });
 }
 
-function toggleAdvancedStats(element)
-{
-    const 
-    {
+// Toggles the match chart. Passes the matchup around using JSON.
+function toggleAdvancedStats(element) {
+    const {
         matchupPeriod,
         awayAbbrev,
         awayName, 
         awayId,
-        awayTotalPoints,
         awayPointsByScoringPeriod,
         homeAbbrev,
         homeName,
         homeId,
-        homeTotalPoints,
         homePointsByScoringPeriod,
     } = JSON.parse(element.dataset.matchup);
     
@@ -149,8 +142,7 @@ function toggleAdvancedStats(element)
     const existingCanvas = document.getElementById(canvasId);
 
     // Check if canvas already exists:
-    if (existingCanvas)
-    {
+    if (existingCanvas) {
         existingCanvas.remove();
         return;
     }
@@ -159,9 +151,8 @@ function toggleAdvancedStats(element)
     canvas.id = canvasId;
 
     // Chart creation has to be deffered to ensure DOM is updated:
-    setTimeout(() => 
-    {
-        plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, awayPointsByScoringPeriod, homePointsByScoringPeriod);
+    setTimeout(() => {
+        plotCumulativeLineChart(canvasId, awayAbbrev, homeAbbrev, awayId, homeId, awayPointsByScoringPeriod, homePointsByScoringPeriod);
     }, 0);
 
     element.appendChild(canvas);
@@ -196,8 +187,7 @@ function extractMatchupData(matchup, teams)
     const { abbrev: awayAbbrev, logo: awayLogo, name: awayName,  } = awayTeam;
     const { abbrev: homeAbbrev, logo: homeLogo, name: homeName,  } = homeTeam;
 
-    const matchupData = 
-    {
+    const matchupData = {
         matchupPeriod: matchupPeriodId,
 
         awayAbbrev: awayAbbrev,
@@ -222,8 +212,7 @@ function extractMatchupData(matchup, teams)
 
     let string = "";
 
-    switch (winner)
-    {
+    switch (winner) {
         case ("AWAY"):
             string += `
             ${matchupPrefix}
@@ -267,16 +256,13 @@ function extractMatchupData(matchup, teams)
             string += `
             ${matchupPrefix}
             <img src=${awayLogo} class="inline-logo" /> 
-            <strong>${awayName}</strong> (${awayTotalPoints}) 
+            <strong>[${awayTotalPoints}] ${awayName}</strong>
             versus 
             <img src=${homeLogo} class="inline-logo" /> 
-            <strong>${homeName}</strong> (${homeTotalPoints}) 
+            <strong>[${homeTotalPoints}] ${homeName}</strong>
             `;
             break;
         }
-
-        default:
-            console.log("Something went wrong in the switch statement...");
     }
 
     // Append new div to the container:
@@ -295,13 +281,17 @@ function extractMatchupData(matchup, teams)
     div.append(matchupContainer);
 }
 
-function plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, awayPoints, homePoints)
-{
+// Plots the cuumulative line chart on the specified canvas. Uses Chart.js for this.
+function plotCumulativeLineChart(canvasId, awayName, homeName, awayId, homeId, awayPoints, homePoints) {
     const context = document.getElementById(`${canvasId}`).getContext('2d');
+
+    // Add an extra zero at the start of the array to create a "Day 0", or pregame.
+    awayPoints.unshift(0)
+    homePoints.unshift(0)
 
     // Dynamically create chart labels:
     let labels = [];
-    labels = awayPoints.map((_, index) => labels[index] = `Day ${index + 1}`);
+    labels = awayPoints.map((_, index) => labels[index] = index === 0 ? `Pregame` : `Day ${index}`);
 
     new Chart(context, {
         type: 'line',
