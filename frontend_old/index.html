@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>Fantasy Hockey Dashboard</title>
+        <!-- Thank you Josh for this tool! https://favicons.joshuasoileau.com/ -->
+            <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='1em' font-size='80'>🏒</text></svg>"
+        />
+        <link href="styles.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        </style>
+    </head>
+
+    <body>
+        <!-- For use within the Stick & Puck Fantasy Hockey League -->
+        <!-- Code written and maintained by Connor McLeod (Hello if you are reading this!) -->
+        <header>
+            <h1><strong>Fantasy Hockey Dashboard</strong></h1>
+            <p>Click any matchup to see further info.</p>
+        </header>
+        <div class="button-container">
+            <button id="year-select-2024" class="year-button">2023-2024</button>
+            <button id="umhl-year-select-2025" class="year-button">2024-2025 UMHL</button>
+            <button id="year-select-2025" class="year-button">2024-2025</button>
+        </div>
+        <div id="result" class="result-container"></div>
+        <footer>
+            <p>This website was written and is maintained by Connor McLeod ★ Find me on <a href="https://www.linkedin.com/in/weakbox/" target="_blank">LinkedIn</a></p>
+        </footer>
+        <!-- Import Chart.js from content delivery network (CDN): -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="script.js"></script>
+    </body>   
+</html>
