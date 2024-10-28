@@ -1,0 +1,13 @@
+.matchInfo {
+  margin: 1rem;
+}
+
+.lineupHeader {
+  margin: 1rem;
+}
+
+.playerContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}

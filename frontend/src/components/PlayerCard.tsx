@@ -199,7 +199,7 @@ export function PlayerCard({name, headshotURL, proTeam, proTeamLogoURL, position
   // Get the top N stats from the pointsBreakdown:
   const getTopStats = (n: number) => Object.entries(pointsBreakdown).sort((a, b) => b[1] - a[1]).slice(0, n);
 
-  const renderTopStats = () => getTopStats(2).map(stat => <span>{stat[0]}: {stat[1].toFixed(1)}</span>); // Fix unique key problem.
+  const renderTopStats = () => getTopStats(2).map(stat => <span>{stat[0]}: {stat[1].toFixed(1)} </span>); // Fix unique key problem.
 
   // Bug here for names with a space (Joel Eriksson Ek).
   const splitNames = (fullName: string) => {
@@ -227,7 +227,26 @@ export function PlayerCard({name, headshotURL, proTeam, proTeamLogoURL, position
 }
 
 export function PlayerCardList({name, headshotURL, proTeam, proTeamLogoURL, position, points, pointsBreakdown}: Player) {
+  const teamColors = proTeamColorMap[proTeam];
+  
+  const convertPoints = () => {
+    return Object.entries(pointsBreakdown).map(stat => {
+      const name = stat[0];
+      const amount = stat[1];
+      return (
+        <span className={name}>{amount.toFixed(1)}</span>
+      );
+    });
+  };
+
   return (
-    <div className={styles.listContainer}>{name}</div>
+    <div className={styles.listContainer} style={{backgroundColor: teamColors.primary, color: teamColors.secondary}}>
+      <div className={styles.pictureContainerSmall} style={{borderColor: teamColors.tertiary}}>
+        <img className={styles.headshotSmall} src={headshotURL}/>
+      </div>
+      <span className={styles.fontRubik600}>{name} — {positionMap[position]}</span>
+      <span className={styles.statsContainerList}>{convertPoints()}</span>
+      <span className={styles.fontRubik600}>{points}</span>
+    </div>
   );
 }

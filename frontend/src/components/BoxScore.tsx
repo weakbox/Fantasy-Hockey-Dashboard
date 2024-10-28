@@ -1,5 +1,7 @@
 import { PlayerCard, PlayerCardList } from "./PlayerCard.tsx";
 
+import styles from "./BoxScore.module.css";
+
 interface Player {
   id: number;
   name: string;
@@ -32,7 +34,7 @@ const defaultPlayer: Player = {
   id: 0,
   name: "Hockey Player",
   headshotURL: "./default_headshot.png",
-  proTeam: "NHL",
+  proTeam: "Free Agent",
   proTeamLogoURL: "https://a.espncdn.com/combiner/i?img=/i/teamlogos/leagues/500/nhl.png",
   position: "N/A",
   points: 0,
@@ -86,14 +88,16 @@ export default function BoxScore({title, homeTeam, homeScore, awayTeam, awayScor
   };
 
   return (
-    <>
-      <h2>{title}</h2>
-      <p><img src={awayTeam.logoURL} alt={`${awayTeam.name} logo`} width="42" height="42"/> {awayScore} - <img src={homeTeam.logoURL} alt={`${homeTeam.name} logo`} width="42" height="42"/> {homeScore}</p>
-      <p>{winner == "HOME" ? homeTeam.name : awayTeam.name} wins!</p>
-      <h3>{awayTeam.abbrev} Starting Lineup:</h3>
-      <div className="boxscore-player-container">{renderLineup(awayTeam.lineup)}</div>
-      <h3>{homeTeam.abbrev} Starting Lineup:</h3>
-      <div className="boxscore-player-container">{renderLineup(homeTeam.lineup)}</div>
-    </>
+    <div className={styles.container}>
+      <div className={styles.matchInfo}>
+        <h2>{title}</h2>
+        <p><img src={awayTeam.logoURL} alt={`${awayTeam.name} logo`} width="42" height="42"/> {awayScore} - <img src={homeTeam.logoURL} alt={`${homeTeam.name} logo`} width="42" height="42"/> {homeScore}</p>
+        <p>{winner == "HOME" ? homeTeam.name : awayTeam.name} wins!</p>
+      </div>
+      <h3 className={styles.lineupHeader}>{awayTeam.abbrev} Stars of the Week:</h3>
+      <div className={styles.playerContainer}>{renderLineup(awayTeam.lineup)}</div>
+      <h3 className={styles.lineupHeader}>{homeTeam.abbrev} Stars of the Week:</h3>
+      <div className={styles.playerContainer}>{renderLineup(homeTeam.lineup)}</div>
+    </div>
   );
 };
