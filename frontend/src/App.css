@@ -154,7 +154,7 @@
 .player-divider {
   height: 0.5rem;
   width: 90%;
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 .player-stats-container {
