@@ -17,164 +17,164 @@ type TeamColors = {
 
 const proTeamColorMap: Record<string, TeamColors> = {
   "Anaheim Ducks": {
-    primary: "#FC1907",
-    secondary: "#000000",
-    tertiary: "#89734C",
+    primary: "hsl(5, 95%, 50%)",
+    secondary: "hsl(0, 0%, 99%)",
+    tertiary: "hsl(35, 49%, 56%)",
   },
   "Boston Bruins": {
-    primary: "#FFB81C",
-    secondary: "#000000",
-    tertiary: "#FFFFFF",
+    primary: "hsl(43, 100%, 50%)",
+    secondary: "hsl(0, 0%, 0%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Buffalo Sabres": {
-    primary: "#003087",
-    secondary: "#FFB81C",
-    tertiary: "#FFFFFF",
+    primary: "hsl(221, 100%, 27%)",
+    secondary: "hsl(44, 98%, 50%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Calgary Flames": {
-    primary: "#D2001C",
-    secondary: "#FAAF19",
-    tertiary: "#FFFFFF",
+    primary: "hsl(356, 100%, 41%)",
+    secondary: "hsl(36, 95%, 53%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Carolina Hurricanes": {
-    primary: "#333F48",
-    secondary: "#C8102E",
-    tertiary: "#010101",
+    primary: "hsl(204, 30%, 21%)",
+    secondary: "hsl(350, 94%, 47%)",
+    tertiary: "hsl(191, 10%, 70%)",
   },
   "Chicago Blackhawks": {
-    primary: "#CF0A2C",
-    secondary: "#FFFFFF",
-    tertiary: "#000000",
+    primary: "hsl(352, 80%, 50%)",
+    secondary: "hsl(0, 0%, 100%)",
+    tertiary: "hsl(0, 0%, 0%)",
   },
   "Colorado Avalanche": {
-    primary: "#6F263D",
-    secondary: "#236192",
-    tertiary: "#A2AAAD",
+    primary: "hsl(347, 55%, 34%)",
+    secondary: "hsl(202, 100%, 29%)",
+    tertiary: "hsl(210, 9%, 70%)",
   },
   "Columbus Blue Jackets": {
-    primary: "#002654",
-    secondary: "#CE1126",
-    tertiary: "#A2AAAD",
+    primary: "hsl(218, 100%, 13%)",
+    secondary: "hsl(350, 95%, 47%)",
+    tertiary: "hsl(192, 8%, 65%)",
   },
   "Dallas Stars": {
-    primary: "#006847",
-    secondary: "#FFFFFF",
-    tertiary: "#000000",
+    primary: "hsl(156, 100%, 21%)",
+    secondary: "hsl(0, 0%, 100%)",
+    tertiary: "hsl(0, 0%, 0%)",
   },
   "Detroit Red Wings": {
-    primary: "#CE1126",
-    secondary: "#FFFFFF",
-    tertiary: "#CE1126",
+    primary: "hsl(357, 79%, 48%)",
+    secondary: "hsl(0, 0%, 100%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Edmonton Oilers": {
-    primary: "#00205B",
-    secondary: "#CF4520",
-    tertiary: "#FFFFFF",
+    primary: "hsl(16, 100%, 50%)",
+    secondary: "hsl(222, 98%, 14%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Florida Panthers": {
-    primary: "#C8102E",
-    secondary: "#041E42",
-    tertiary: "#B9975B",
+    primary: "hsl(355, 100%, 39%)",
+    secondary: "hsl(219, 82%, 14%)",
+    tertiary: "hsl(39, 29%, 55%)",
   },
   "Los Angeles Kings": {
-    primary: "#111111",
-    secondary: "#A2AAAD",
-    tertiary: "#FFFFFF",
+    primary: "hsl(0, 0%, 7%)",
+    secondary: "hsl(192, 9%, 66%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Minnesota Wild": {
-    primary: "#154734",
-    secondary: "#DDCBA4",
-    tertiary: "#A6192E",
+    primary: "hsl(160, 100%, 13%)",
+    secondary: "hsl(35, 56%, 77%)",
+    tertiary: "hsl(352, 83%, 43%)",
   },
   "Montréal Canadiens": {
-    primary: "#A6192E",
-    secondary: "#001E62",
-    tertiary: "#FFFFFF",
+    primary: "hsl(350, 83%, 42%)",
+    secondary: "hsl(215, 88%, 27%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Nashville Predators": {
-    primary: "#FFB81C",
-    secondary: "#041E42",
-    tertiary: "#FFFFFF",
+    primary: "hsl(40, 98%, 59%)",
+    secondary: "hsl(212, 98%, 19%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "New Jersey Devils": {
-    primary: "#CE1126",
-    secondary: "#000000",
-    tertiary: "#046A38",
+    primary: "hsl(0, 100%, 47%)",
+    secondary: "hsl(0, 0%, 0%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "New York Islanders": {
-    primary: "#003087",
-    secondary: "#FC4C02",
-    tertiary: "#FFFFFF",
+    primary: "hsl(211, 100%, 28%)",
+    secondary: "hsl(21, 100%, 54%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "New York Rangers": {
-    primary: "#0032A0",
-    secondary: "#C8102E",
-    tertiary: "#FFFFFF",
+    primary: "hsl(211, 100%, 30%)",
+    secondary: "hsl(354, 79%, 50%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Ottawa Senators": {
-    primary: "#000000",
-    secondary: "#C8102E",
-    tertiary: "#B9975B",
+    primary: "hsl(0, 0%, 0%)",
+    secondary: "hsl(355, 100%, 39%)",
+    tertiary: "hsl(36, 49%, 55%)",
   },
   "Philadelphia Flyers": {
-    primary: "#CF4520",
-    secondary: "#FFFFFF",
-    tertiary: "#000000",
+    primary: "hsl(16, 100%, 47%)",
+    secondary: "hsl(0, 0%, 100%)",
+    tertiary: "hsl(0, 0%, 0%)",
   },
   "Pittsburgh Penguins": {
-    primary: "#000000",
-    secondary: "#FCB514",
-    tertiary: "#FFFFFF",
+    primary: "hsl(0, 0%, 0%)",
+    secondary: "hsl(46, 99%, 53%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "St. Louis Blues": {
-    primary: "#002F87",
-    secondary: "#FFB81C",
-    tertiary: "#041E42",
+    primary: "hsl(220, 100%, 27%)",
+    secondary: "hsl(45, 100%, 58%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "San Jose Sharks": {
-    primary: "#006D75",
-    secondary: "#FFFFFF",
-    tertiary: "#EA7200",
+    primary: "hsl(188, 100%, 27%)",
+    secondary: "hsl(0, 0%, 100%)",
+    tertiary: "hsl(32, 88%, 53%)",
   },
   "Seattle Kraken": {
-    primary: "#001628",
-    secondary: "#99D9D9",
-    tertiary: "#6BA4B8",
+    primary: "hsl(210, 94%, 8%)",
+    secondary: "hsl(180, 58%, 64%)",
+    tertiary: "hsl(350, 94%, 47%)",
   },
   "Tampa Bay Lightning": {
-    primary: "#00205B",
-    secondary: "#FFFFFF",
-    tertiary: "#000000",
+    primary: "hsl(0, 0%, 100%)",
+    secondary: "hsl(223, 100%, 18%)",
+    tertiary: "hsl(0, 0%, 0%)",
   },
   "Toronto Maple Leafs": {
-    primary: "#00205B",
-    secondary: "#FFFFFF",
-    tertiary: "#00205B",
+    primary: "hsl(223, 100%, 18%)",
+    secondary: "hsl(0, 0%, 100%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Utah Hockey Club": {
-    primary: "#010101",
-    secondary: "#69B3E7",
-    tertiary: "#FFFFFF",
+    primary: "hsl(0, 0%, 1%)",
+    secondary: "hsl(200, 66%, 65%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Vancouver Canucks": {
-    primary: "#00205B",
-    secondary: "#00843D",
-    tertiary: "#FFFFFF",
+    primary: "hsl(223, 100%, 18%)",
+    secondary: "hsl(146, 100%, 26%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Vegas Golden Knights": {
-    primary: "#B4975A",
-    secondary: "#333F48",
-    tertiary: "#C8102E",
+    primary: "hsl(35, 49%, 56%)",
+    secondary: "hsl(200, 27%, 17%)",
+    tertiary: "hsl(355, 100%, 39%)",
   },
   "Washington Capitals": {
-    primary: "#C8102E",
-    secondary: "#041E42",
-    tertiary: "#FFFFFF",
+    primary: "hsl(351, 95%, 47%)",
+    secondary: "hsl(219, 97%, 13%)",
+    tertiary: "hsl(0, 0%, 100%)",
   },
   "Winnipeg Jets": {
-    primary: "#041E42",
-    secondary: "#A2AAAD",
-    tertiary: "#004C97",
+    primary: "hsl(218, 100%, 13%)",
+    secondary: "hsl(192, 8%, 65%)",
+    tertiary: "hsl(209, 71%, 47%)",
   },
 };
 
@@ -197,27 +197,37 @@ const Player = ({name, headshotURL, proTeam, proTeamAbbrev, proTeamLogoURL, posi
   // Get the top N stats from the pointsBreakdown:
   const getTopStats = (n: number) => Object.entries(pointsBreakdown).sort((a, b) => b[1] - a[1]).slice(0, n);
 
-  const renderTopStats = () => getTopStats(2).map(stat => <span>{stat[0]}: {stat[1]}</span>); // Fix unique key problem.
- 
-  // The renderTopStats() is rendering sort of weirdly.
+  const renderTopStats = () => getTopStats(2).map(stat => <span>{stat[0]}: {stat[1].toFixed(1)}</span>); // Fix unique key problem.
+
+  // Bug here for names with a space (Joel Eriksson Ek).
+  const splitNames = (fullName: string) => {
+    return fullName.split(' ');
+  };
+
   return (
-    <div className="player-container" style={{
-      backgroundColor: teamColors.primary, 
-      color: teamColors.secondary,
-      }}>
-      <div className="player-text-container">
-        <span className="player-name">{name}</span>
-        <span>{positionMap[position]}</span>
-        <span>{proTeamAbbrev}</span>
+    <div className="player-container" style={{backgroundColor: teamColors.primary}}>
+
+      <div className="player-title-container" style={{color: teamColors.secondary}}>
+        <span className="player-firstname font-rubik-600">{splitNames(name)[0].toUpperCase()}</span>
+        <span className="player-lastname font-rubik-900">{splitNames(name)[1].toUpperCase()}</span>
       </div>
-      <div className="player-photo">
-        <img className="player-pro-team-logo" src={proTeamLogoURL} alt={`${proTeam} logo`} />
-        <img className="player-headshot" src={headshotURL} alt={`${name}'s headshot`} />
+
+      <span className="player-subtitle font-rubik-600" style={{color: teamColors.tertiary}}>{positionMap[position]} — {proTeam}</span>
+
+      {/* <span className="player-stars font-rubik-600" style={{color: teamColors.secondary}}>★★★</span> */}
+
+      <div className="player-picture-container">
+        <img className="player-team-logo" src={proTeamLogoURL}/>
+        <img className="player-headshot" src={headshotURL}/>
       </div>
-      <div className="player-points-container">
-        <span className="player-points">{points}</span>
-        <span className="player-top-stats">{renderTopStats()}</span> 
+
+      <div className="player-divider" style={{backgroundColor: teamColors.tertiary}}></div>
+
+      <div className="player-stats-container" style={{color: teamColors.secondary}}>
+        <span className="player-stats-top1 font-rubik-900">POINTS: {points}</span>
+        <span className="player-stats-top2 font-rubik-600">{renderTopStats()}</span>
       </div>
+
     </div>
   );
 };
@@ -265,9 +275,9 @@ const BoxScore = ({title, homeTeam, homeScore, awayTeam, awayScore, winner}: Box
       <p><img src={awayTeam.logoURL} alt={`${awayTeam.name} logo`} width="42" height="42"/> {awayScore} - <img src={homeTeam.logoURL} alt={`${homeTeam.name} logo`} width="42" height="42"/> {homeScore}</p>
       <p>{winner == "HOME" ? homeTeam.name : awayTeam.name} wins!</p>
       <h3>{awayTeam.abbrev} Starting Lineup:</h3>
-      <div>{renderPlayers(awayTeam.lineup)}</div>
+      <div className="boxscore-player-container">{renderPlayers(awayTeam.lineup)}</div>
       <h3>{homeTeam.abbrev} Starting Lineup:</h3>
-      <div>{renderPlayers(homeTeam.lineup)}</div>
+      <div className="boxscore-player-container">{renderPlayers(homeTeam.lineup)}</div>
     </>
   );
 };

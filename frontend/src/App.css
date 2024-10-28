@@ -1,7 +1,11 @@
 /* I added this! */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   /* border: 1px solid red; */
 }
 
@@ -10,12 +14,6 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
-
-@font-face {
-  font-family: "Goldplay";
-  src:local("goldplay-bold"),
-  url(".\assets\fonts\goldplay-bold.otf") 
 }
 
 .logo {
@@ -54,41 +52,114 @@
   color: #888;
 }
 
-/* NEW STUFF!!! */
+/* BoxScore component: */
+.boxscore-player-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* Player Component: */
+
+.font-rubik-600 {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.font-rubik-900 {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
 
 .player-container {
-  font-family: Goldplay;
   display: flex;
-  justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin: 0.5rem;
-  padding: 0 2rem;
-  border-radius: 12px;
+  height: 20rem;
+  aspect-ratio: 3/4; 
+  padding: 0.5rem 0;
+  position: relative;
+  border-radius: 4px; 
+  box-shadow: 
+    rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, 
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
-.player-name {
-  font-size: 2rem;
+/* Overlay texture above everything in the card */
+.player-container::after {
+  position: absolute;
+  width: 100%; 
+  height: 100%;
+  content: ""; 
+  background-image: url("grunge_texture.png");
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  mix-blend-mode: screen; 
+  z-index: 3;
 }
 
-.player-text-container {
+.player-title-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 100%;
 }
 
-.player-pro-team-logo {
-  
-  height: 100px;
+.player-title-container, .player-stats-container {
+  padding: 0.5rem;
+}
+
+.player-firstname, .player-subtitle, .player-stats-top2, .player-stars {
+  font-size: 1rem;
+  line-height: 1rem; 
+}
+
+.player-lastname, .player-stats-top1 {
+  font-size: 2rem;
+  line-height: 1.75rem;
+}
+
+.player-picture-container {
+  object-fit: contain;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  width: 90%;
+}
+
+.player-team-logo, .player-headshot {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.player-team-logo {
+  width: 65%;
+  z-index: 1;
 }
 
 .player-headshot {
-  height: 100px;
+  width: 100%;
+  z-index: 2;
 }
 
-.player-photo {
-  display: grid;
+.player-divider {
+  height: 0.5rem;
+  width: 90%;
+  border-radius: 2px;
 }
 
-.player-points {
-  font-size: 4rem;
-  font-weight: bold;
+.player-stats-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
