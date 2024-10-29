@@ -34,6 +34,7 @@ interface Team {
 const MatchupDetails = () => {
   const URL = "http://127.0.0.1:8000/869377698/2025/boxscores/4";
 
+
   // (NOOB COMMENT) Declares state for boxScores, which can be an array of BoxScore objects or null.
   // Initially set to null since no data is available before the fetch happens when the component mounts.
   const [boxScores, setBoxScores] = useState<BoxScore[] | null>(null);

@@ -20,6 +20,11 @@ const proTeamColorMap: Record<string, TeamColors> = {
     secondary: "hsl(0, 0%, 99%)",
     tertiary: "hsl(35, 49%, 56%)",
   },
+  "Arizona Coyotes": {
+    primary: "hsl(268, 67%, 37%)",
+    secondary: "hsl(42, 42%, 73%)",
+    tertiary: "hsl(25, 67%, 45%)",
+  },
   "Boston Bruins": {
     primary: "hsl(43, 100%, 50%)",
     secondary: "hsl(0, 0%, 0%)",
