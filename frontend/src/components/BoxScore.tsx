@@ -1,4 +1,5 @@
 import MatchupCard from "./MatchupCard.tsx";
+import HeadToHead from "./HeadToHead.tsx";
 import { PlayerCard, PlayerCardList } from "./PlayerCard.tsx";
 
 import styles from "./BoxScore.module.css";
@@ -92,20 +93,24 @@ export default function BoxScore({title, homeTeam, homeScore, awayTeam, awayScor
     <div className={styles.container}>
       <MatchupCard
         awayTeamName={awayTeam.name}
+        awayTeamAbbrev={awayTeam.abbrev}
         awayTeamLogo={awayTeam.logoURL}
         awayScore={awayScore}
         homeTeamName={homeTeam.name}
+        homeTeamAbbrev={homeTeam.abbrev}
         homeTeamLogo={homeTeam.logoURL}
         homeScore={homeScore}
       />
+      <HeadToHead
+        awayAbbrev={awayTeam.abbrev}
+        awayLineup={awayTeam.lineup}
+        homeAbbrev={homeTeam.abbrev}
+        homeLineup={homeTeam.lineup}
+      />
       <div className={styles.container2}>
         <div className={styles.lineupContainer}>
-          <h3 className={styles.lineupHeader}>{awayTeam.name} Stars of the Week:</h3>
-          <div className={styles.playerContainer}>{renderLineup(awayTeam.lineup)}</div>
-        </div>
-        <div className={styles.lineupContainer}>
-          <h3 className={styles.lineupHeader}>{homeTeam.name} Stars of the Week:</h3>
-          <div className={styles.playerContainer}>{renderLineup(homeTeam.lineup)}</div>
+          <h3 className={styles.lineupHeader}>This Matchup's Three Stars</h3>
+          <div className={styles.playerContainer}>{renderLineup([...awayTeam.lineup, ...homeTeam.lineup])}</div>
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ interface Team {
 }
 
 const MatchupDetails = () => {
-  const URL = "http://127.0.0.1:8000/869377698/2025/boxscores/4";
+  const URL = "http://127.0.0.1:8000/869377698/2025/boxscores/1";
 
 
   // (NOOB COMMENT) Declares state for boxScores, which can be an array of BoxScore objects or null.

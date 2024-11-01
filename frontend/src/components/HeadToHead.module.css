@@ -1,23 +1,27 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   padding: 1rem;
   border: 1px solid lightslategray;
   border-radius: 4px;
   font-family: "Rubik", sans-serif;
-  width: 100%
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.teamContainer {
+.statContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
 }
 
-.fontBold {
+.statContainer:nth-child(odd) {
+  background-color: rgb(223, 232, 245);
+}
+
+.bold {
   font-weight: 700;
 }

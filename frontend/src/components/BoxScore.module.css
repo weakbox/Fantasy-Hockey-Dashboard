@@ -3,8 +3,11 @@
   margin-bottom: 1rem;
   border: 1px solid lightslategray;
   border-radius: 4px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-  rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .container2 {
@@ -13,18 +16,16 @@
   justify-content: center;
   align-items: flex-start;
   gap: 1rem;
+  border: 1px solid lightslategray;
+  border-radius: 4px;
 }
 
 .lineupContainer {
   padding: 1rem;
 }
 
-.matchInfo {
-  margin: 1rem;
-}
-
 .lineupHeader {
-  margin: 1rem;
+  margin-bottom: 1rem;
 }
 
 .playerContainer {
